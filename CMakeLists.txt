@@ -36,7 +36,7 @@ set_package_properties(Wayland PROPERTIES
 # adjusting CMAKE_C_FLAGS to get wayland protocols to compile
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 
-ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELL_QT
+ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/layershellqt_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfigVersion.cmake"
                         SOVERSION 5)
@@ -49,7 +49,15 @@ set(CMAKECONFIG_INSTALL_DIR ${KDE_INSTALL_LIBDIR}/cmake/LayerShellQt)
 install(EXPORT LayerShellQtTargets
         NAMESPACE LayerShellQt::
         DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-        FILE LayerShellQtTargets.cmake )
+        FILE LayerShellQtTargets.cmake)
+
+configure_package_config_file(LayerShellQtConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfig.cmake"
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfig.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfigVersion.cmake
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
 ecm_qt_declare_logging_category(ksld_SRCS
     HEADER
