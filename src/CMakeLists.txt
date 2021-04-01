@@ -40,5 +40,5 @@ install(TARGETS LayerShellQtInterface EXPORT LayerShellQtTargets ${KDE_INSTALL_T
 install(FILES
     ${LayerShellQt_HEADERS}
     ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQt/layershellqt_export.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/LayerShellQt COMPONENT Devel
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/LayerShellQt COMPONENT Devel
 )
