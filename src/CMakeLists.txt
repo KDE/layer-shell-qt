@@ -3,9 +3,6 @@ remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml BASENAME xdg-shell)
 ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL wlr-layer-shell-unstable-v1.xml BASENAME wlr-layer-shell-unstable-v1)
 
-add_library(layer-shell SHARED qwaylandlayershellintegrationplugin.cpp)
-target_link_libraries(layer-shell LayerShellQtInterface Qt5::WaylandClient Qt::WaylandClientPrivate Qt5::XkbCommonSupportPrivate)
-
 ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
     HEADER
         layershellqt_logging.h
@@ -25,6 +22,9 @@ set_target_properties(LayerShellQtInterface PROPERTIES VERSION   ${LAYERSHELLQT_
                                                        SOVERSION ${LAYERSHELLQT_SOVERSION}
                                                        EXPORT_NAME Interface
 )
+
+add_library(layer-shell SHARED qwaylandlayershellintegrationplugin.cpp)
+target_link_libraries(layer-shell LayerShellQtInterface Qt5::WaylandClient Qt::WaylandClientPrivate Qt5::XkbCommonSupportPrivate Wayland::Client)
 
 ecm_generate_headers(LayerShellQt_HEADERS
     HEADER_NAMES
