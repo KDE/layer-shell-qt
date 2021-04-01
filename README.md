@@ -2,7 +2,8 @@
 
 This component is meant for applications to be able to easily use clients based on wlr-layer-shell.
 
-What the protocol does is roughly explained in here: https://drewdevault.com/2018/07/29/Wayland-shells.html
+Here you can read about what the protocol does and how shells work:
+https://drewdevault.com/2018/07/29/Wayland-shells.html
 
 ## Usage
 
