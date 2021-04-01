@@ -59,14 +59,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfigVersion.cmake
         DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
-ecm_qt_declare_logging_category(ksld_SRCS
-    HEADER
-        layershellqt_logging.h
-    IDENTIFIER
-        LAYERSHELL_QT
-    CATEGORY_NAME
-        layershellqt
-    DEFAULT_SEVERITY
-        Critical
-)
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

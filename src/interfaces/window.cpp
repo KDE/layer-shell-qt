@@ -5,9 +5,9 @@
  */
 
 #include "window.h"
-#include <QDebug>
 #include <private/qwaylandwindow_p.h>
 #include <private/qwaylandshellsurface_p.h>
+#include <layershellqt_logging.h>
 #include "../qwaylandlayersurface_p.h"
 
 using namespace LayerShellQt;
@@ -53,12 +53,12 @@ Window *Window::get(QWindow *window)
 {
     auto ww = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
     if (!ww) {
-        qDebug() << "window not a wayland window" << window;
+        qCDebug(LAYERSHELLQT) << "window not a wayland window" << window;
         return nullptr;
     }
     QWaylandLayerSurface* s = qobject_cast<QWaylandLayerSurface *>(ww->shellSurface());
     if (!s) {
-        qDebug() << "window not using wlr-layer-shell" << window << ww->shellSurface();
+        qCDebug(LAYERSHELLQT) << "window not using wlr-layer-shell" << window << ww->shellSurface();
         return nullptr;
     }
 

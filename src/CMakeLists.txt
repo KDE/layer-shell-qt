@@ -6,6 +6,15 @@ ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL wlr-layer-shell-u
 add_library(layer-shell SHARED qwaylandlayershellintegrationplugin.cpp)
 target_link_libraries(layer-shell LayerShellQtInterface Qt5::WaylandClient Qt::WaylandClientPrivate Qt5::XkbCommonSupportPrivate)
 
+ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
+    HEADER
+        layershellqt_logging.h
+    IDENTIFIER
+        LAYERSHELLQT
+    CATEGORY_NAME
+        layershellqt
+)
+
 add_library(LayerShellQtInterface SHARED qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
 target_link_libraries(LayerShellQtInterface PRIVATE Qt5::Gui Qt::WaylandClientPrivate Qt5::XkbCommonSupportPrivate Wayland::Client)
 target_include_directories(LayerShellQtInterface PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/LayerShellQt>"
