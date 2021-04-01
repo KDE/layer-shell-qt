@@ -45,6 +45,12 @@ include(ECMQtDeclareLoggingCategory)
 add_subdirectory(src)
 add_subdirectory(tests)
 
+set(CMAKECONFIG_INSTALL_DIR ${KDE_INSTALL_LIBDIR}/cmake/LayerShellQt)
+install(EXPORT LayerShellQtTargets
+        NAMESPACE LayerShellQt::
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+        FILE LayerShellQtTargets.cmake )
+
 ecm_qt_declare_logging_category(ksld_SRCS
     HEADER
         layershellqt_logging.h

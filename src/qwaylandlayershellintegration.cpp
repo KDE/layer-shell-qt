@@ -12,8 +12,6 @@
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
 #include <QtWaylandClient/private/qwaylanddisplay_p.h>
 
-QT_BEGIN_NAMESPACE
-
 namespace LayerShellQt {
 
 QWaylandLayerShellIntegration::QWaylandLayerShellIntegration() :
@@ -47,7 +45,5 @@ void QWaylandLayerShellIntegration::registryLayer(void *data,
 }
 
 }
-
-QT_END_NAMESPACE
 
 //#include "qwaylandlayershellintegration.moc"

@@ -11,12 +11,13 @@
 #include <wayland-client.h>
 
 #include <QtWaylandClient/private/qwaylandshellintegration_p.h>
+#include "layershellqt_export.h"
 
 namespace LayerShellQt {
 
 class QWaylandLayerShell;
 
-class QWaylandLayerShellIntegration : public QtWaylandClient::QWaylandShellIntegration
+class LAYERSHELLQT_EXPORT QWaylandLayerShellIntegration : public QtWaylandClient::QWaylandShellIntegration
 {
 public:
     QWaylandLayerShellIntegration();

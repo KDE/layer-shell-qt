@@ -17,7 +17,7 @@
 
 namespace LayerShellQt {
 
-class QWaylandLayerShell : public QtWayland::zwlr_layer_shell_v1
+class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QtWayland::zwlr_layer_shell_v1
 {
 public:
     QWaylandLayerShell(struct QtWayland::zwlr_layer_shell_v1 *shell);
