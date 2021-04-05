@@ -12,7 +12,7 @@
 
 namespace LayerShellQt {
 
-QWaylandLayerShell::QWaylandLayerShell(struct QtWayland::zwlr_layer_shell_v1 *shell)
+QWaylandLayerShell::QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell)
     : QtWayland::zwlr_layer_shell_v1(shell->object())
 {
 }
