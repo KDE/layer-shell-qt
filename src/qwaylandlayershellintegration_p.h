@@ -10,11 +10,11 @@
 
 #include <wayland-client.h>
 
-#include <QtWaylandClient/private/qwaylandshellintegration_p.h>
 #include "layershellqt_export.h"
+#include <QtWaylandClient/private/qwaylandshellintegration_p.h>
 
-namespace LayerShellQt {
-
+namespace LayerShellQt
+{
 class QWaylandLayerShell;
 
 class LAYERSHELLQT_EXPORT QWaylandLayerShellIntegration : public QtWaylandClient::QWaylandShellIntegration
@@ -23,12 +23,10 @@ public:
     QWaylandLayerShellIntegration();
 
     bool initialize(QtWaylandClient::QWaylandDisplay *display) override;
-    QtWaylandClient::QWaylandShellSurface *createShellSurface(
-            QtWaylandClient::QWaylandWindow *window) override;
+    QtWaylandClient::QWaylandShellSurface *createShellSurface(QtWaylandClient::QWaylandWindow *window) override;
 
 private:
-    static void registryLayer(void *data, struct wl_registry *registry,
-            uint32_t id, const QString &interface, uint32_t version);
+    static void registryLayer(void *data, struct wl_registry *registry, uint32_t id, const QString &interface, uint32_t version);
 
     QWaylandLayerShell *m_layerShell;
 };

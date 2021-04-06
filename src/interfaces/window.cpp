@@ -5,10 +5,10 @@
  */
 
 #include "window.h"
-#include <private/qwaylandwindow_p.h>
-#include <private/qwaylandshellsurface_p.h>
-#include <layershellqt_logging.h>
 #include "../qwaylandlayersurface_p.h"
+#include <layershellqt_logging.h>
+#include <private/qwaylandshellsurface_p.h>
+#include <private/qwaylandwindow_p.h>
 
 using namespace LayerShellQt;
 
@@ -47,7 +47,8 @@ void Window::setKeyboardInteractivity(bool enabled)
 
 Window::Window(WindowPrivate *d)
     : d(d)
-{}
+{
+}
 
 Window *Window::get(QWindow *window)
 {
@@ -56,7 +57,7 @@ Window *Window::get(QWindow *window)
         qCDebug(LAYERSHELLQT) << "window not a wayland window" << window;
         return nullptr;
     }
-    QWaylandLayerSurface* s = qobject_cast<QWaylandLayerSurface *>(ww->shellSurface());
+    QWaylandLayerSurface *s = qobject_cast<QWaylandLayerSurface *>(ww->shellSurface());
     if (!s) {
         qCDebug(LAYERSHELLQT) << "window not using wlr-layer-shell" << window << ww->shellSurface();
         return nullptr;

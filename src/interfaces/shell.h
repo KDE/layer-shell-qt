@@ -11,11 +11,11 @@
 
 namespace LayerShellQt
 {
-
 /**
  * Sets the right environment so the shells created from now on use wlr-layer-shell.
  */
-class LAYERSHELLQT_EXPORT Shell {
+class LAYERSHELLQT_EXPORT Shell
+{
 public:
     static void useLayerShell();
 };

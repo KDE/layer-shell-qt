@@ -10,8 +10,8 @@
 
 #include <qwayland-wlr-layer-shell-unstable-v1.h>
 
-namespace LayerShellQt {
-
+namespace LayerShellQt
+{
 QWaylandLayerShell::QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell)
     : QtWayland::zwlr_layer_shell_v1(shell->object())
 {
@@ -22,8 +22,7 @@ QWaylandLayerShell::~QWaylandLayerShell()
     zwlr_layer_shell_v1_destroy(object());
 }
 
-QWaylandLayerSurface *QWaylandLayerShell::createLayerSurface(
-        QtWaylandClient::QWaylandWindow *window)
+QWaylandLayerSurface *QWaylandLayerShell::createLayerSurface(QtWaylandClient::QWaylandWindow *window)
 {
     return new QWaylandLayerSurface(this, window);
 }

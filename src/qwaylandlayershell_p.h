@@ -10,21 +10,20 @@
 
 #include <wayland-client.h>
 
-#include <qwayland-wlr-layer-shell-unstable-v1.h>
 #include <QtWaylandClient/private/qwaylandshellintegration_p.h>
+#include <qwayland-wlr-layer-shell-unstable-v1.h>
 
 #include "qwaylandlayersurface_p.h"
 
-namespace LayerShellQt {
-
+namespace LayerShellQt
+{
 class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QtWayland::zwlr_layer_shell_v1
 {
 public:
     QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell);
     virtual ~QWaylandLayerShell();
 
-    QWaylandLayerSurface *createLayerSurface(
-            QtWaylandClient::QWaylandWindow *window);
+    QWaylandLayerSurface *createLayerSurface(QtWaylandClient::QWaylandWindow *window);
     // TODO: Popups
 };
 

@@ -10,24 +10,23 @@
 
 #include <wayland-client.h>
 
-#include <qwayland-wlr-layer-shell-unstable-v1.h>
-#include <QtWaylandClient/private/qwaylandshellsurface_p.h>
 #include "layershellqt_export.h"
+#include <QtWaylandClient/private/qwaylandshellsurface_p.h>
+#include <qwayland-wlr-layer-shell-unstable-v1.h>
 
-namespace LayerShellQt {
-
+namespace LayerShellQt
+{
 class QWaylandLayerShell;
 
-class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylandShellSurface,
-    public QtWayland::zwlr_layer_surface_v1
+class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylandShellSurface, public QtWayland::zwlr_layer_surface_v1
 {
     Q_OBJECT
 public:
-    QWaylandLayerSurface(QWaylandLayerShell *shell,
-            QtWaylandClient::QWaylandWindow *window);
+    QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window);
     virtual ~QWaylandLayerSurface();
 
-    bool isExposed() const override {
+    bool isExposed() const override
+    {
         return m_configured;
     }
 
@@ -39,8 +38,7 @@ public:
     void applyConfigure() override;
 
 private:
-    void zwlr_layer_surface_v1_configure(uint32_t serial,
-            uint32_t width, uint32_t height) override;
+    void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_closed() override;
 
     QSize m_pendingSize;

@@ -5,8 +5,8 @@
  */
 
 #include "shell.h"
-#include <qglobal.h>
 #include <QByteArray>
+#include <qglobal.h>
 
 using namespace LayerShellQt;
 

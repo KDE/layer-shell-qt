@@ -8,21 +8,21 @@
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
 
-#include <qwayland-wlr-layer-shell-unstable-v1.h>
-#include <QtWaylandClient/private/qwaylandwindow_p.h>
-#include <QtWaylandClient/private/qwaylandsurface_p.h>
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
+#include <QtWaylandClient/private/qwaylandsurface_p.h>
+#include <QtWaylandClient/private/qwaylandwindow_p.h>
+#include <qwayland-wlr-layer-shell-unstable-v1.h>
 
-namespace LayerShellQt {
-
+namespace LayerShellQt
+{
 QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1(
-            // TODO: Specify namespace
-            shell->get_layer_surface(window->waylandSurface()->object(),
-                window->waylandScreen()->output(),
-                QtWayland::zwlr_layer_shell_v1::layer_top,
-                QStringLiteral("qt")))
+          // TODO: Specify namespace
+          shell->get_layer_surface(window->waylandSurface()->object(),
+                                   window->waylandScreen()->output(),
+                                   QtWayland::zwlr_layer_shell_v1::layer_top,
+                                   QStringLiteral("qt")))
 {
     set_anchor(anchor_top | anchor_bottom | anchor_left | anchor_right);
 }
@@ -37,8 +37,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
     window()->window()->close();
 }
 
-void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial,
-            uint32_t width, uint32_t height)
+void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
 {
     ack_configure(serial);
     m_pendingSize = QSize(width, height);

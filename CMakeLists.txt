@@ -23,11 +23,11 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
-include(CheckIncludeFiles)
 include(CMakePackageConfigHelpers)
 include(FeatureSummary)
 include(GenerateExportHeader)
 include(KDEClangFormat)
+include(ECMQtDeclareLoggingCategory)
 
 find_package(WaylandScanner)
 find_package(QtWaylandScanner)
@@ -36,7 +36,6 @@ find_package(WaylandProtocols)
 
 set_package_properties(Wayland PROPERTIES
                        TYPE REQUIRED)
-# adjusting CMAKE_C_FLAGS to get wayland protocols to compile
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 
 ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
@@ -44,7 +43,8 @@ ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfigVersion.cmake"
                         SOVERSION 5)
 
-include(ECMQtDeclareLoggingCategory)
+file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
+kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 add_subdirectory(src)
 add_subdirectory(tests)
 

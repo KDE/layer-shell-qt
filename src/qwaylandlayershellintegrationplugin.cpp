@@ -5,27 +5,26 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <QtWaylandClient/private/qwaylandshellintegrationplugin_p.h>
 #include "qwaylandlayershellintegration_p.h"
+#include <QtWaylandClient/private/qwaylandshellintegrationplugin_p.h>
 
 using namespace LayerShellQt;
 
-class QWaylandLayerShellIntegrationPlugin :
-        public QtWaylandClient::QWaylandShellIntegrationPlugin
+class QWaylandLayerShellIntegrationPlugin : public QtWaylandClient::QWaylandShellIntegrationPlugin
 {
-        Q_OBJECT
-        Q_PLUGIN_METADATA(
-                        IID QWaylandShellIntegrationFactoryInterface_iid
-                        FILE "layer-shell.json")
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID QWaylandShellIntegrationFactoryInterface_iid FILE "layer-shell.json")
 
 public:
-    QWaylandLayerShellIntegrationPlugin() {}
+    QWaylandLayerShellIntegrationPlugin()
+    {
+    }
 
-    QtWaylandClient::QWaylandShellIntegration *create(
-                    const QString &key, const QStringList &paramList) override {
-            Q_UNUSED(key);
-            Q_UNUSED(paramList);
-            return new QWaylandLayerShellIntegration();
+    QtWaylandClient::QWaylandShellIntegration *create(const QString &key, const QStringList &paramList) override
+    {
+        Q_UNUSED(key);
+        Q_UNUSED(paramList);
+        return new QWaylandLayerShellIntegration();
     }
 };
 
