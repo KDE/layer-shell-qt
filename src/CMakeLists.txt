@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Aleix Pol Gonzalez <aleixpol@kde.org>
+# SPDX-License-Identifier: BSD-3-Clause
+
 remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml BASENAME xdg-shell)
