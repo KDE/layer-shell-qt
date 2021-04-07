@@ -8,8 +8,6 @@
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
 
-#include <qwayland-wlr-layer-shell-unstable-v1.h>
-
 namespace LayerShellQt
 {
 QWaylandLayerShell::QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell)

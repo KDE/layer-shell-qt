@@ -11,7 +11,6 @@
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
 #include <QtWaylandClient/private/qwaylandsurface_p.h>
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
-#include <qwayland-wlr-layer-shell-unstable-v1.h>
 
 namespace LayerShellQt
 {
