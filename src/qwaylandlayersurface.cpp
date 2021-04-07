@@ -77,4 +77,10 @@ void QWaylandLayerSurface::setKeyboardInteractivity(bool enabled)
     set_keyboard_interactivity(enabled);
 }
 
+void QWaylandLayerSurface::setLayer(uint32_t layer)
+{
+    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_LAYER_SINCE_VERSION)
+        set_layer(layer);
+}
+
 }

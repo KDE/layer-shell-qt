@@ -45,6 +45,11 @@ void Window::setKeyboardInteractivity(bool enabled)
     d->surface->setKeyboardInteractivity(enabled);
 }
 
+void Window::setLayer(Layer layer)
+{
+    d->surface->setLayer(layer);
+}
+
 Window::Window(WindowPrivate *d)
     : d(d)
 {

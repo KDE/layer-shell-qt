@@ -34,6 +34,7 @@ public:
     void setExclusiveZone(int32_t zone);
     void setMargins(const QMargins &margins);
     void setKeyboardInteractivity(bool enabled);
+    void setLayer(uint32_t layer);
 
     void applyConfigure() override;
 

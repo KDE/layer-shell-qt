@@ -31,10 +31,22 @@ public:
     };
     Q_ENUM(Anchor);
 
+    /**
+     * This enum type is used to specify the layer where a surface can be put in.
+     */
+    enum Layer {
+        LayerBackground = 0,
+        LayerBottom = 1,
+        LayerTop = 2,
+        LayerOverlay = 3,
+    };
+    Q_ENUM(Layer)
+
     void setAnchor(Anchor anchor);
     void setExclusiveZone(int32_t zone);
     void setMargins(const QMargins &margins);
     void setKeyboardInteractivity(bool enabled);
+    void setLayer(Layer layer);
 
     static Window *get(QWindow *window);
 
