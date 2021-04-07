@@ -35,7 +35,7 @@ void QWaylandLayerShellIntegration::registryLayer(void *data, struct wl_registry
 {
     QWaylandLayerShellIntegration *shell = static_cast<QWaylandLayerShellIntegration *>(data);
 
-    if (interface == QStringLiteral("zwlr_layer_shell_v1"))
+    if (interface == zwlr_layer_shell_v1_interface.name)
         shell->m_layerShell = new QWaylandLayerShell(new QtWayland::zwlr_layer_shell_v1(registry, id, version));
 }
 
