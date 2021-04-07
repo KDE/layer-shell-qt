@@ -5,6 +5,9 @@ This component is meant for applications to be able to easily use clients based 
 Here you can read about what the protocol does and how shells work:
 https://drewdevault.com/2018/07/29/Wayland-shells.html
 
+Report issues in this component here:
+https://bugs.kde.org/enter_bug.cgi?product=layer-shell-qt
+
 ## Usage
 
 ### CMake
