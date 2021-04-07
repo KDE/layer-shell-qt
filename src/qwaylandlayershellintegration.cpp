@@ -15,7 +15,6 @@
 namespace LayerShellQt
 {
 QWaylandLayerShellIntegration::QWaylandLayerShellIntegration()
-    : m_layerShell(Q_NULLPTR)
 {
 }
 

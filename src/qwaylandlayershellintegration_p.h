@@ -28,7 +28,7 @@ public:
 private:
     static void registryLayer(void *data, struct wl_registry *registry, uint32_t id, const QString &interface, uint32_t version);
 
-    QWaylandLayerShell *m_layerShell;
+    QWaylandLayerShell *m_layerShell = nullptr;
 };
 
 }
