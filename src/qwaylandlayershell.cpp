@@ -17,7 +17,8 @@ QWaylandLayerShell::QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell)
 
 QWaylandLayerShell::~QWaylandLayerShell()
 {
-    zwlr_layer_shell_v1_destroy(object());
+    if (zwlr_layer_shell_v1_get_version(object()) >= ZWLR_LAYER_SHELL_V1_DESTROY_SINCE_VERSION)
+        zwlr_layer_shell_v1_destroy(object());
 }
 
 QWaylandLayerSurface *QWaylandLayerShell::createLayerSurface(QtWaylandClient::QWaylandWindow *window)
