@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Layer Shell Qt
+Upstream-Contact: Aleix Pol Gonzalez <aleixpol@kde.org>
+Source: https://invent.kde.org/plasma/layer-shell-qt
+
+Files: *.kdev4
+Copyright: none
+License: CC0-1.0
+
