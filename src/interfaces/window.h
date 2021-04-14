@@ -30,6 +30,7 @@ public:
         AnchorRight = 8, // the right edge of the anchor rectangle
     };
     Q_ENUM(Anchor);
+    Q_DECLARE_FLAGS(Anchors, Anchor)
 
     /**
      * This enum type is used to specify the layer where a surface can be put in.
@@ -42,12 +43,28 @@ public:
     };
     Q_ENUM(Layer)
 
-    void setAnchor(Anchor anchor);
-    void setExclusiveZone(int32_t zone);
-    void setMargins(const QMargins &margins);
-    void setKeyboardInteractivity(bool enabled);
-    void setLayer(Layer layer);
+    void setAnchor(Anchors anchor);
+    Anchors anchor() const;
 
+    void setExclusiveZone(int32_t zone);
+    int32_t exclusionZone() const;
+
+    void setMargins(const QMargins &margins);
+    QMargins margins() const;
+
+    void setKeyboardInteractivity(bool enabled);
+    bool keyboardInteractivity() const;
+
+    void setLayer(Layer layer);
+    Layer layer() const;
+
+    void setScope(const QString &scope);
+    QString scope() const;
+
+    /**
+     * Gets the LayerShell Window for a given Qt Window
+     * Ownership is not transferred
+     */
     static Window *get(QWindow *window);
 
 private:

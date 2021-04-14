@@ -8,6 +8,8 @@
 #define LAYERSHELLQTSHELL_H
 
 #include "layershellqt_export.h"
+#include "window.h"
+#include <QString>
 
 namespace LayerShellQt
 {

@@ -5,6 +5,7 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "interfaces/shell.h"
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
 
@@ -16,14 +17,38 @@ namespace LayerShellQt
 {
 QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
-    , QtWayland::zwlr_layer_surface_v1(
-          // TODO: Specify namespace
-          shell->get_layer_surface(window->waylandSurface()->object(),
-                                   window->waylandScreen()->output(),
-                                   QtWayland::zwlr_layer_shell_v1::layer_top,
-                                   QStringLiteral("qt")))
+    , QtWayland::zwlr_layer_surface_v1()
 {
-    set_anchor(anchor_top | anchor_bottom | anchor_left | anchor_right);
+    Window::Layer layer =Window::LayerTop;
+    QString scope =QStringLiteral( "qt");
+    LayerShellQt::Window *interface = Window::get(window->window());
+    Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
+
+    if (interface) {
+        anchors = interface->anchor();
+        layer = interface->layer();
+        scope = interface->scope();
+    }
+
+    init(shell->get_layer_surface(window->waylandSurface()->object(), window->waylandScreen()->output(), layer, scope));
+    set_anchor(anchors);
+
+    if (interface) {
+        setMargins(interface->margins());
+        setKeyboardInteractivity(interface->keyboardInteractivity());
+        setExclusiveZone(interface->exclusionZone());
+    }
+
+    QSize size = window->surfaceSize();
+    if (anchors & Window::AnchorLeft && anchors & Window::AnchorRight) {
+        size.setWidth(0);
+    }
+    if (anchors & Window::AnchorTop && anchors & Window::AnchorBottom) {
+        size.setHeight(0);
+    }
+    if (size.isValid() && size != QSize(0,0)) {
+        set_size(size.width(), size.height());
+    }
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
