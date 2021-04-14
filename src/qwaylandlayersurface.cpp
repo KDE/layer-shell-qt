@@ -5,6 +5,7 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include "interfaces/shell.h"
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
 
@@ -17,13 +18,25 @@ namespace LayerShellQt
 QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1(
-          // TODO: Specify namespace
-          shell->get_layer_surface(window->waylandSurface()->object(),
-                                   window->waylandScreen()->output(),
-                                   QtWayland::zwlr_layer_shell_v1::layer_top,
-                                   QStringLiteral("qt")))
+          shell->get_layer_surface(window->waylandSurface()->object(), window->waylandScreen()->output(), Shell::defaultLayer(), Shell::defaultScope()))
 {
-    set_anchor(anchor_top | anchor_bottom | anchor_left | anchor_right);
+    const auto anchors = Shell::defaultAnchors();
+    set_anchor(anchors);
+
+    if (!Shell::defaultMargins().isNull()) {
+        setMargins(Shell::defaultMargins());
+    }
+
+    QSize size = window->surfaceSize();
+    if (anchors & Window::AnchorLeft && anchors & Window::AnchorRight) {
+        size.setWidth(0);
+    }
+    if (anchors & Window::AnchorTop && anchors & Window::AnchorBottom) {
+        size.setHeight(0);
+    }
+    if (size.isValid() && size != QSize(0,0)) {
+        set_size(size.width(), size.height());
+    }
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()

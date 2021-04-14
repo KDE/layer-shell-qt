@@ -8,6 +8,8 @@
 #define LAYERSHELLQTSHELL_H
 
 #include "layershellqt_export.h"
+#include "window.h"
+#include <QString>
 
 namespace LayerShellQt
 {
@@ -18,6 +20,18 @@ class LAYERSHELLQT_EXPORT Shell
 {
 public:
     static void useLayerShell();
+
+    static void setDefaultMargins(const QMargins &margins);
+    static QMargins defaultMargins();
+
+    static void setDefaultScope(const QString &scope);
+    static QString defaultScope();
+
+    static void setDefaultLayer(Window::Layer defaultLayer);
+    static Window::Layer defaultLayer();
+
+    static void setDefaultAnchors(Window::Anchors defaultAnchors);
+    static Window::Anchors defaultAnchors();
 };
 
 }
