@@ -69,7 +69,10 @@ int main(int argc, char **argv)
                                    QStringLiteral("One of ") + enumsToStringList(layerMetaEnum).join(QLatin1String("|")),
                                    QStringLiteral("layer"),
                                    QStringLiteral("LayerTop"));
-    parser.addOptions({marginsOption, scopeOption, anchorsOption, layerOption});
+    QCommandLineOption widthOption(QStringLiteral("width"), QStringLiteral("Width of the window"), QStringLiteral("pixels"), QStringLiteral("0"));
+    QCommandLineOption heightOption(QStringLiteral("height"), QStringLiteral("Height of the window"), QStringLiteral("pixels"), QStringLiteral("0"));
+
+    parser.addOptions({marginsOption, scopeOption, anchorsOption, layerOption, widthOption, heightOption});
     parser.addHelpOption();
     parser.process(app);
 
@@ -90,6 +93,13 @@ int main(int argc, char **argv)
     if (parser.isSet(anchorsOption)) {
         layerShell->setAnchors(stringToEnum<Window::Anchors>(anchorMetaEnum, parser.value(anchorsOption)));
     }
+    if (parser.isSet(widthOption)) {
+        window.setWidth(parser.value(widthOption).toInt());
+    }
+    if (parser.isSet(heightOption)) {
+        window.setHeight(parser.value(heightOption).toInt());
+    }
+
     window.show();
 
     // just so you don't block yourself out whilst testing
