@@ -43,8 +43,8 @@ public:
     };
     Q_ENUM(Layer)
 
-    void setAnchor(Anchors anchor);
-    Anchors anchor() const;
+    void setAnchors(Anchors anchor);
+    Anchors anchors() const;
 
     void setExclusiveZone(int32_t zone);
     int32_t exclusionZone() const;
@@ -58,6 +58,13 @@ public:
     void setLayer(Layer layer);
     Layer layer() const;
 
+    /**
+     * Sets a string based identifier for this window.
+     * This may be used by a compositor to determine stacking
+     * order within a given layer.
+     *
+     * May also be referred to as a role
+     */
     void setScope(const QString &scope);
     QString scope() const;
 
@@ -68,7 +75,7 @@ public:
     static Window *get(QWindow *window);
 
 private:
-    Window(WindowPrivate *d);
+    Window(QWindow *window);
     QScopedPointer<WindowPrivate> d;
 };
 

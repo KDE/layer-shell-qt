@@ -7,10 +7,10 @@
 #include <QCommandLineParser>
 
 #include <QGuiApplication>
-#include <QRasterWindow>
-#include <QWindow>
 #include <QPainter>
+#include <QRasterWindow>
 #include <QTimer>
+#include <QWindow>
 
 #include <QMetaEnum>
 
@@ -42,9 +42,10 @@ T stringToEnum(QMetaEnum metaEnum, const QString &str)
 
 class BasicWindow : public QRasterWindow
 {
-    void paintEvent(QPaintEvent *) {
+    void paintEvent(QPaintEvent *)
+    {
         QPainter p(this);
-        p.fillRect(QRect(0,0,width(), height()), Qt::red);
+        p.fillRect(QRect(0, 0, width(), height()), Qt::red);
     }
 };
 
@@ -72,10 +73,9 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.process(app);
 
-
     BasicWindow window;
 
-    LayerShellQt::Window* layerShell = LayerShellQt::Window::get(&window);
+    LayerShellQt::Window *layerShell = LayerShellQt::Window::get(&window);
     if (parser.isSet(marginsOption)) {
         int margins = parser.value(marginsOption).toInt();
         layerShell->setMargins({margins, margins, margins, margins});
@@ -88,10 +88,9 @@ int main(int argc, char **argv)
         layerShell->setLayer(Window::Layer(layerMetaEnum.keyToValue(qPrintable(parser.value(layerOption)))));
     }
     if (parser.isSet(anchorsOption)) {
-        layerShell->setAnchor(stringToEnum<Window::Anchors>(anchorMetaEnum, parser.value(anchorsOption)));
+        layerShell->setAnchors(stringToEnum<Window::Anchors>(anchorMetaEnum, parser.value(anchorsOption)));
     }
     window.show();
-
 
     // just so you don't block yourself out whilst testing
     QTimer::singleShot(5000, &app, &QGuiApplication::quit);

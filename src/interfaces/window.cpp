@@ -21,39 +21,39 @@ public:
     }
 
     QWindow *parentWindow;
-    QString scope = QStringLiteral("qt");
-    Window::Anchors anchor = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
+    QString scope = QStringLiteral("window");
+    Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
     int32_t exclusionZone = 0;
-    bool keyboardInteractivity = false;
+    bool keyboardInteractivity = true;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
-    QWaylandLayerSurface* getSurface() const;
+    QWaylandLayerSurface *getSurface() const;
 };
 
-static QMap<QWindow*, Window*> s_map;
+static QMap<QWindow *, Window *> s_map;
 
 Window::~Window()
 {
-        s_map.remove(d->parentWindow);
+    s_map.remove(d->parentWindow);
 }
 
-void Window::setAnchor(Anchors anchor)
+void Window::setAnchors(Anchors anchors)
 {
-    d->anchor = anchor;
+    d->anchors = anchors;
     if (auto surface = d->getSurface()) {
-        surface->setAnchor(anchor);
+        surface->setAnchor(anchors);
     }
 }
 
-Window::Anchors Window::anchor() const
+Window::Anchors Window::anchors() const
 {
-    return d->anchor;
+    return d->anchors;
 }
 
 void Window::setExclusiveZone(int32_t zone)
 {
     d->exclusionZone = zone;
-    if (auto surface= d->getSurface()) {
+    if (auto surface = d->getSurface()) {
         surface->setExclusiveZone(zone);
     }
 }
@@ -66,7 +66,7 @@ int32_t Window::exclusionZone() const
 void Window::setMargins(const QMargins &margins)
 {
     d->margins = margins;
-    if (auto surface= d->getSurface()) {
+    if (auto surface = d->getSurface()) {
         surface->setMargins(margins);
     }
 }
@@ -79,7 +79,7 @@ QMargins Window::margins() const
 void Window::setKeyboardInteractivity(bool enabled)
 {
     d->keyboardInteractivity = enabled;
-    if (auto surface= d->getSurface()) {
+    if (auto surface = d->getSurface()) {
         surface->setKeyboardInteractivity(enabled);
     }
 }
@@ -92,7 +92,7 @@ bool Window::keyboardInteractivity() const
 void Window::setLayer(Layer layer)
 {
     d->layer = layer;
-    if (auto surface= d->getSurface()) {
+    if (auto surface = d->getSurface()) {
         surface->setLayer(layer);
     }
 }
@@ -100,7 +100,7 @@ void Window::setLayer(Layer layer)
 void Window::setScope(const QString &scope)
 {
     d->scope = scope;
-    //this is static and must be set before the platform window is created
+    // this is static and must be set before the platform window is created
 }
 
 QString Window::scope() const
@@ -113,11 +113,20 @@ Window::Layer Window::layer() const
     return d->layer;
 }
 
-Window::Window(WindowPrivate *d)
-    : QObject(d->parentWindow)
-    , d(d)
+Window::Window(QWindow *window)
+    : QObject(window)
+    , d(new WindowPrivate(window))
 {
     s_map.insert(d->parentWindow, this);
+}
+
+Window *Window::get(QWindow *window)
+{
+    auto layerShellWindow = s_map.value(window);
+    if (layerShellWindow) {
+        return layerShellWindow;
+    }
+    return new Window(window);
 }
 
 QWaylandLayerSurface *WindowPrivate::getSurface() const
@@ -136,12 +145,4 @@ QWaylandLayerSurface *WindowPrivate::getSurface() const
         return nullptr;
     }
     return s;
-}
-
-Window *Window::get(QWindow *window)
-{
-    if (s_map.contains(window)) {
-        return s_map[window];
-    }
-    return new Window(new WindowPrivate(window));
 }

@@ -19,25 +19,17 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
 {
-    Window::Layer layer =Window::LayerTop;
-    QString scope =QStringLiteral( "qt");
     LayerShellQt::Window *interface = Window::get(window->window());
-    Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
+    Q_ASSERT(interface);
 
-    if (interface) {
-        anchors = interface->anchor();
-        layer = interface->layer();
-        scope = interface->scope();
-    }
+    init(shell->get_layer_surface(window->waylandSurface()->object(), window->waylandScreen()->output(), interface->layer(), interface->scope()));
 
-    init(shell->get_layer_surface(window->waylandSurface()->object(), window->waylandScreen()->output(), layer, scope));
-    set_anchor(anchors);
+    Window::Anchors anchors = interface->anchors();
 
-    if (interface) {
-        setMargins(interface->margins());
-        setKeyboardInteractivity(interface->keyboardInteractivity());
-        setExclusiveZone(interface->exclusionZone());
-    }
+    set_anchor(interface->anchors());
+    setMargins(interface->margins());
+    setKeyboardInteractivity(interface->keyboardInteractivity());
+    setExclusiveZone(interface->exclusionZone());
 
     QSize size = window->surfaceSize();
     if (anchors & Window::AnchorLeft && anchors & Window::AnchorRight) {
@@ -46,7 +38,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
     if (anchors & Window::AnchorTop && anchors & Window::AnchorBottom) {
         size.setHeight(0);
     }
-    if (size.isValid() && size != QSize(0,0)) {
+    if (size.isValid() && size != QSize(0, 0)) {
         set_size(size.width(), size.height());
     }
 }
