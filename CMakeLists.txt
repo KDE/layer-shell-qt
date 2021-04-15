@@ -33,6 +33,9 @@ find_package(WaylandScanner)
 find_package(QtWaylandScanner)
 find_package(Wayland 1.3 COMPONENTS Client Server)
 find_package(WaylandProtocols)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)
 
 set_package_properties(Wayland PROPERTIES
                        TYPE REQUIRED)

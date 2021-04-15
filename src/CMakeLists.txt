@@ -16,7 +16,7 @@ ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
 )
 
 add_library(LayerShellQtInterface SHARED qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
-target_link_libraries(LayerShellQtInterface PRIVATE Qt::Gui Qt::WaylandClientPrivate Qt::XkbCommonSupportPrivate Wayland::Client)
+target_link_libraries(LayerShellQtInterface PRIVATE Qt::Gui Qt::WaylandClientPrivate Qt::XkbCommonSupportPrivate Wayland::Client PkgConfig::XKBCOMMON)
 target_include_directories(LayerShellQtInterface PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/LayerShellQt>"
                                               INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/>"
 )
@@ -27,7 +27,7 @@ set_target_properties(LayerShellQtInterface PROPERTIES VERSION   ${LAYERSHELLQT_
 )
 
 add_library(layer-shell SHARED qwaylandlayershellintegrationplugin.cpp)
-target_link_libraries(layer-shell LayerShellQtInterface Qt::WaylandClient Qt::WaylandClientPrivate Qt::XkbCommonSupportPrivate Wayland::Client)
+target_link_libraries(layer-shell LayerShellQtInterface Qt::WaylandClient Qt::WaylandClientPrivate Qt::XkbCommonSupportPrivate Wayland::Client PkgConfig::XKBCOMMON)
 
 ecm_generate_headers(LayerShellQt_HEADERS
     HEADER_NAMES
