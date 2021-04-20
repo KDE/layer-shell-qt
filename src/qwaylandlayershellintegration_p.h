@@ -21,6 +21,7 @@ class LAYERSHELLQT_EXPORT QWaylandLayerShellIntegration : public QtWaylandClient
 {
 public:
     QWaylandLayerShellIntegration();
+    ~QWaylandLayerShellIntegration() override;
 
     bool initialize(QtWaylandClient::QWaylandDisplay *display) override;
     QtWaylandClient::QWaylandShellSurface *createShellSurface(QtWaylandClient::QWaylandWindow *window) override;
@@ -28,7 +29,7 @@ public:
 private:
     static void registryLayer(void *data, struct wl_registry *registry, uint32_t id, const QString &interface, uint32_t version);
 
-    QWaylandLayerShell *m_layerShell = nullptr;
+    QScopedPointer<QWaylandLayerShell> m_layerShell;
 };
 
 }
