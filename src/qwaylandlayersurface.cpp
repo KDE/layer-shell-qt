@@ -32,10 +32,10 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
     setExclusiveZone(interface->exclusionZone());
 
     QSize size = window->surfaceSize();
-    if (anchors & Window::AnchorLeft && anchors & Window::AnchorRight) {
+    if ((anchors & Window::AnchorLeft) && (anchors & Window::AnchorRight)) {
         size.setWidth(0);
     }
-    if (anchors & Window::AnchorTop && anchors & Window::AnchorBottom) {
+    if ((anchors & Window::AnchorTop) && (anchors & Window::AnchorBottom)) {
         size.setHeight(0);
     }
     if (size.isValid() && size != QSize(0, 0)) {
