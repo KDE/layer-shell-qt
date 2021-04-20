@@ -33,7 +33,7 @@ public:
     void setAnchor(uint32_t anchor);
     void setExclusiveZone(int32_t zone);
     void setMargins(const QMargins &margins);
-    void setKeyboardInteractivity(bool enabled);
+    void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);
 
     void applyConfigure() override;

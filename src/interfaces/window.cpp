@@ -24,7 +24,7 @@ public:
     QString scope = QStringLiteral("window");
     Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
     int32_t exclusionZone = 0;
-    bool keyboardInteractivity = true;
+    Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityExclusive;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
     QWaylandLayerSurface *getSurface() const;
@@ -76,15 +76,15 @@ QMargins Window::margins() const
     return d->margins;
 }
 
-void Window::setKeyboardInteractivity(bool enabled)
+void Window::setKeyboardInteractivity(KeyboardInteractivity interactivity)
 {
-    d->keyboardInteractivity = enabled;
+    d->keyboardInteractivity = interactivity;
     if (auto surface = d->getSurface()) {
-        surface->setKeyboardInteractivity(enabled);
+        surface->setKeyboardInteractivity(interactivity);
     }
 }
 
-bool Window::keyboardInteractivity() const
+Window::KeyboardInteractivity Window::keyboardInteractivity() const
 {
     return d->keyboardInteractivity;
 }

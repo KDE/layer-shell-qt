@@ -43,6 +43,16 @@ public:
     };
     Q_ENUM(Layer)
 
+    /**
+     * This enum type is used to specify how the layer surface handles keyboard focus.
+     */
+    enum KeyboardInteractivity {
+        KeyboardInteractivityNone = 0,
+        KeyboardInteractivityExclusive = 1,
+        KeyboardInteractivityOnDemand = 2,
+    };
+    Q_ENUM(KeyboardInteractivity)
+
     void setAnchors(Anchors anchor);
     Anchors anchors() const;
 
@@ -52,8 +62,8 @@ public:
     void setMargins(const QMargins &margins);
     QMargins margins() const;
 
-    void setKeyboardInteractivity(bool enabled);
-    bool keyboardInteractivity() const;
+    void setKeyboardInteractivity(KeyboardInteractivity interactivity);
+    KeyboardInteractivity keyboardInteractivity() const;
 
     void setLayer(Layer layer);
     Layer layer() const;

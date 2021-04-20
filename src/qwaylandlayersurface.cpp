@@ -89,9 +89,9 @@ void QWaylandLayerSurface::setMargins(const QMargins &margins)
     set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
 }
 
-void QWaylandLayerSurface::setKeyboardInteractivity(bool enabled)
+void QWaylandLayerSurface::setKeyboardInteractivity(uint32_t interactivity)
 {
-    set_keyboard_interactivity(enabled);
+    set_keyboard_interactivity(interactivity);
 }
 
 void QWaylandLayerSurface::setLayer(uint32_t layer)
