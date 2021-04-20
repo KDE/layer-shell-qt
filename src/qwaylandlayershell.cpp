@@ -10,8 +10,8 @@
 
 namespace LayerShellQt
 {
-QWaylandLayerShell::QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell)
-    : QtWayland::zwlr_layer_shell_v1(shell->object())
+QWaylandLayerShell::QWaylandLayerShell(::wl_registry *registry, uint32_t id, uint32_t version)
+    : QtWayland::zwlr_layer_shell_v1(registry, id, version)
 {
 }
 

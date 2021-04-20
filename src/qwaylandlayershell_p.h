@@ -20,7 +20,7 @@ namespace LayerShellQt
 class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QtWayland::zwlr_layer_shell_v1
 {
 public:
-    QWaylandLayerShell(QtWayland::zwlr_layer_shell_v1 *shell);
+    QWaylandLayerShell(::wl_registry *registry, uint32_t id, uint32_t version);
     virtual ~QWaylandLayerShell();
 
     QWaylandLayerSurface *createLayerSurface(QtWaylandClient::QWaylandWindow *window);
