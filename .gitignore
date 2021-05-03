@@ -1,0 +1,5 @@
+/compile_commands.json
+.clangd
+.cache
+.idea
+/cmake-build*
