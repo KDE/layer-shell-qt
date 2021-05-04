@@ -21,7 +21,7 @@ target_include_directories(LayerShellQtInterface PUBLIC "$<BUILD_INTERFACE:${CMA
                                               INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/>"
 )
 
-set_target_properties(LayerShellQtInterface PROPERTIES VERSION   ${LAYERSHELLQT_VERSION_STRING}
+set_target_properties(LayerShellQtInterface PROPERTIES VERSION   ${LAYERSHELLQT_VERSION}
                                                        SOVERSION ${LAYERSHELLQT_SOVERSION}
                                                        EXPORT_NAME Interface
 )
