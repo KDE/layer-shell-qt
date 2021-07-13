@@ -8,6 +8,7 @@
 #include "interfaces/shell.h"
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
+#include "layershellqt_logging.h"
 
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
 #include <QtWaylandClient/private/qwaylandsurface_p.h>
@@ -22,7 +23,14 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
     LayerShellQt::Window *interface = Window::get(window->window());
     Q_ASSERT(interface);
 
-    init(shell->get_layer_surface(window->waylandSurface()->object(), window->waylandScreen()->output(), interface->layer(), interface->scope()));
+    // Qt will always assign a screen to a window, but if the compositor has no screens available a dummy QScreen object is created
+    // this will not cast to a QWaylandScreen
+    QtWaylandClient::QWaylandScreen *screen = window->waylandScreen();
+    if (screen->isPlaceholder()) {
+        qCWarning(LAYERSHELLQT) << "Creating a layer shell for placeholder screen. This will be positioned incorrectly";
+    }
+
+    init(shell->get_layer_surface(window->waylandSurface()->object(), screen->isPlaceholder() ? nullptr : screen->output(), interface->layer(), interface->scope()));
 
     Window::Anchors anchors = interface->anchors();
 
