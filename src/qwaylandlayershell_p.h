@@ -21,7 +21,7 @@ class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QtWayland::zwlr_layer_shel
 {
 public:
     QWaylandLayerShell(::wl_registry *registry, uint32_t id, uint32_t version);
-    virtual ~QWaylandLayerShell();
+    ~QWaylandLayerShell() override;
 
     QWaylandLayerSurface *createLayerSurface(QtWaylandClient::QWaylandWindow *window);
     // TODO: Popups

@@ -23,7 +23,7 @@ class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylan
     Q_OBJECT
 public:
     QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window);
-    virtual ~QWaylandLayerSurface();
+    ~QWaylandLayerSurface() override;
 
     bool isExposed() const override
     {
