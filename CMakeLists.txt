@@ -4,8 +4,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(layershellqt)
-set(PROJECT_VERSION "5.23.80")
-set(PROJECT_VERSION_MAJOR 5)
+set(PROJECT_VERSION "6.0.0")
+set(PROJECT_VERSION_MAJOR 6)
 
 set(CMAKE_C_STANDARD 99)
 
