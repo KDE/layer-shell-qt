@@ -9,15 +9,14 @@ set(PROJECT_VERSION_MAJOR 5)
 
 set(CMAKE_C_STANDARD 99)
 
-set(QT_MIN_VERSION "5.15.0")
+set(QT_MIN_VERSION "6.2.0")
 set(KF5_MIN_VERSION "5.86")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
-find_package(Qt5XkbCommonSupport REQUIRED PRIVATE)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${ECM_MODULE_PATH})
 
@@ -37,8 +36,6 @@ find_package(QtWaylandScanner)
 find_package(Wayland 1.3 COMPONENTS Client Server)
 find_package(WaylandProtocols)
 find_package(PkgConfig REQUIRED)
-
-pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)
 
 set_package_properties(Wayland PROPERTIES
                        TYPE REQUIRED)
