@@ -15,7 +15,7 @@ ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
         layershellqt
 )
 
-add_library(LayerShellQtInterface SHARED qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
+add_library(LayerShellQtInterface SHARED qwaylandlayersurface.cpp interfaces/window.cpp  qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
 target_link_libraries(LayerShellQtInterface PRIVATE Qt::Gui Qt::WaylandClientPrivate Wayland::Client)
 target_include_directories(LayerShellQtInterface PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/LayerShellQt>"
                                               INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/>"
@@ -26,12 +26,8 @@ set_target_properties(LayerShellQtInterface PROPERTIES VERSION   ${LAYERSHELLQT_
                                                        EXPORT_NAME Interface
 )
 
-add_library(layer-shell SHARED qwaylandlayershellintegrationplugin.cpp)
-target_link_libraries(layer-shell LayerShellQtInterface Qt::WaylandClient Qt::WaylandClientPrivate Wayland::Client)
-
 ecm_generate_headers(LayerShellQt_HEADERS
     HEADER_NAMES
-        Shell
         Window
     RELATIVE interfaces/
     REQUIRED_HEADERS LayerShellQt_HEADERS
@@ -43,9 +39,6 @@ generate_export_header(LayerShellQtInterface
     EXPORT_MACRO_NAME LAYERSHELLQT_EXPORT
     EXPORT_FILE_NAME LayerShellQt/layershellqt_export.h
 )
-
-install(TARGETS layer-shell
-        LIBRARY DESTINATION ${QT_PLUGIN_INSTALL_DIR}/wayland-shell-integration)
 
 install(TARGETS LayerShellQtInterface EXPORT LayerShellQtTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 

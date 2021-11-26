@@ -17,12 +17,13 @@
 namespace LayerShellQt
 {
 class QWaylandLayerShell;
+class Window;
 
 class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylandShellSurface, public QtWayland::zwlr_layer_surface_v1
 {
     Q_OBJECT
 public:
-    QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window);
+    QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window, LayerShellQt::Window *interface);
     ~QWaylandLayerSurface() override;
 
     bool isExposed() const override

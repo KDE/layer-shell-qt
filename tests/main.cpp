@@ -14,7 +14,6 @@
 
 #include <QMetaEnum>
 
-#include <interfaces/shell.h>
 #include <interfaces/window.h>
 
 using namespace LayerShellQt;
@@ -51,8 +50,6 @@ class BasicWindow : public QRasterWindow
 
 int main(int argc, char **argv)
 {
-    Shell::useLayerShell();
-
     QGuiApplication app(argc, argv);
 
     const auto layerMetaEnum = QMetaEnum::fromType<Window::Layer>();
@@ -78,7 +75,7 @@ int main(int argc, char **argv)
 
     BasicWindow window;
 
-    LayerShellQt::Window *layerShell = LayerShellQt::Window::get(&window);
+    LayerShellQt::Window *layerShell = new LayerShellQt::Window(&window);
     if (parser.isSet(marginsOption)) {
         int margins = parser.value(marginsOption).toInt();
         layerShell->setMargins({margins, margins, margins, margins});
@@ -101,6 +98,10 @@ int main(int argc, char **argv)
     }
 
     window.show();
+
+    BasicWindow window2;
+    window2.resize(400, 400);
+    window2.show();
 
     // just so you don't block yourself out whilst testing
     QTimer::singleShot(5000, &app, &QGuiApplication::quit);

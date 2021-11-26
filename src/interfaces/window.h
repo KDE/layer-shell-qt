@@ -78,14 +78,8 @@ public:
     void setScope(const QString &scope);
     QString scope() const;
 
-    /**
-     * Gets the LayerShell Window for a given Qt Window
-     * Ownership is not transferred
-     */
-    static Window *get(QWindow *window);
-
-private:
     Window(QWindow *window);
+private:
     QScopedPointer<WindowPrivate> d;
 };
 
