@@ -5,9 +5,9 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "interfaces/shell.h"
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
+#include "interfaces/window.h"
 #include "layershellqt_logging.h"
 
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
@@ -20,7 +20,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
 {
-    LayerShellQt::Window *interface = Window::get(window->window());
+    Window *interface = Window::get(window->window());
     Q_ASSERT(interface);
 
     // Qt will always assign a screen to a window, but if the compositor has no screens available a dummy QScreen object is created

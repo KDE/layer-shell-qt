@@ -15,6 +15,7 @@
 namespace LayerShellQt
 {
 QWaylandLayerShellIntegration::QWaylandLayerShellIntegration()
+    : m_layerShell(new QWaylandLayerShell())
 {
 }
 
@@ -22,26 +23,9 @@ QWaylandLayerShellIntegration::~QWaylandLayerShellIntegration()
 {
 }
 
-bool QWaylandLayerShellIntegration::initialize(QtWaylandClient::QWaylandDisplay *display)
-{
-    QWaylandShellIntegration::initialize(display);
-    display->addRegistryListener(registryLayer, this);
-    return m_layerShell != nullptr;
-}
-
 QtWaylandClient::QWaylandShellSurface *QWaylandLayerShellIntegration::createShellSurface(QtWaylandClient::QWaylandWindow *window)
 {
-    return m_layerShell->createLayerSurface(window);
-}
-
-void QWaylandLayerShellIntegration::registryLayer(void *data, struct wl_registry *registry, uint32_t id, const QString &interface, uint32_t version)
-{
-    QWaylandLayerShellIntegration *shell = static_cast<QWaylandLayerShellIntegration *>(data);
-
-    if (interface == zwlr_layer_shell_v1_interface.name)
-        shell->m_layerShell.reset(new QWaylandLayerShell(registry, id, std::min(version, 4u)));
+    return new QWaylandLayerSurface(m_layerShell.data(), window);
 }
 
 }
-
-//#include "qwaylandlayershellintegration.moc"

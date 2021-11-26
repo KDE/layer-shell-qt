@@ -6,11 +6,14 @@
 
 #include "window.h"
 #include "../qwaylandlayersurface_p.h"
+#include "../qwaylandlayershellintegration_p.h"
 #include <layershellqt_logging.h>
 #include <private/qwaylandshellsurface_p.h>
 #include <private/qwaylandwindow_p.h>
 
 using namespace LayerShellQt;
+
+static const char *s_interfaceKey = "__kde_layer_window";
 
 class LayerShellQt::WindowPrivate
 {
@@ -30,11 +33,9 @@ public:
     QWaylandLayerSurface *getSurface() const;
 };
 
-static QMap<QWindow *, Window *> s_map;
-
 Window::~Window()
 {
-    s_map.remove(d->parentWindow);
+    d->parentWindow->setProperty(s_interfaceKey, QVariant());
 }
 
 void Window::setAnchors(Anchors anchors)
@@ -113,20 +114,28 @@ Window::Layer Window::layer() const
     return d->layer;
 }
 
+static QWaylandLayerShellIntegration *s_integration = nullptr;
+
 Window::Window(QWindow *window)
     : QObject(window)
     , d(new WindowPrivate(window))
 {
-    s_map.insert(d->parentWindow, this);
+    Q_ASSERT(!Window::get(window));
+    window->winId(); // create platform window
+
+    QtWaylandClient::QWaylandWindow *waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
+    if (waylandWindow) {
+        if (!s_integration) {
+            s_integration = new QWaylandLayerShellIntegration();
+        }
+        waylandWindow->setShellIntegration(s_integration);
+        window->setProperty(s_interfaceKey, QVariant::fromValue<QObject *>(this));
+    }
 }
 
 Window *Window::get(QWindow *window)
 {
-    auto layerShellWindow = s_map.value(window);
-    if (layerShellWindow) {
-        return layerShellWindow;
-    }
-    return new Window(window);
+    return qobject_cast<Window *>(qvariant_cast<QObject *>(window->property(s_interfaceKey)));
 }
 
 QWaylandLayerSurface *WindowPrivate::getSurface() const

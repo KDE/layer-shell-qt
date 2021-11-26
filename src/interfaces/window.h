@@ -21,6 +21,7 @@ class LAYERSHELLQT_EXPORT Window : public QObject
 {
     Q_OBJECT
 public:
+    explicit Window(QWindow *window);
     ~Window() override;
 
     enum Anchor {
@@ -85,7 +86,6 @@ public:
     static Window *get(QWindow *window);
 
 private:
-    Window(QWindow *window);
     QScopedPointer<WindowPrivate> d;
 };
 
