@@ -9,6 +9,7 @@
 #define LAYERSHELLQTWINDOW_H
 
 #include <QObject>
+#include <QScreen>
 #include <QWindow>
 
 #include "layershellqt_export.h"
@@ -67,6 +68,14 @@ public:
 
     void setLayer(Layer layer);
     Layer layer() const;
+
+    /**
+     * If set, the compositor will try to put the window on the given screen.
+     * If its not set, then the compositor will decide where to put the window.
+     * Under normal circumstances, this should be the active output.
+     */
+    void setDesiredOutput(QScreen *output);
+    QScreen *desiredOutput() const;
 
     /**
      * Sets a string based identifier for this window.

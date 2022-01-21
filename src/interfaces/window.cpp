@@ -28,6 +28,7 @@ public:
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
     QWaylandLayerSurface *getSurface() const;
+    QPointer<QScreen> desiredOutput;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -111,6 +112,16 @@ QString Window::scope() const
 Window::Layer Window::layer() const
 {
     return d->layer;
+}
+
+QScreen *Window::desiredOutput() const
+{
+    return d->desiredOutput;
+}
+
+void Window::setDesiredOutput(QScreen *output)
+{
+    d->desiredOutput = output;
 }
 
 Window::Window(QWindow *window)
