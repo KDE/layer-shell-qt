@@ -1,0 +1,14 @@
+maintainer:
+- vladz
+description: Layer Shell Qt
+platforms:
+    - name: Linux
+    - name: FreeBSD
+portingAid: false
+deprecated: false
+release: true
+
+group: Plasma
+public_lib: true
+public_source_dirs:
+    - src/interfaces

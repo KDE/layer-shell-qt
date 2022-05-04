@@ -25,10 +25,10 @@ public:
     ~Window() override;
 
     enum Anchor {
-        AnchorTop = 1, // the top edge of the anchor rectangle
-        AnchorBottom = 2, // the bottom edge of the anchor rectangle
-        AnchorLeft = 4, // the left edge of the anchor rectangle
-        AnchorRight = 8, // the right edge of the anchor rectangle
+        AnchorTop = 1, ///< The top edge of the anchor rectangle
+        AnchorBottom = 2, ///< The bottom edge of the anchor rectangle
+        AnchorLeft = 4, ///< The left edge of the anchor rectangle
+        AnchorRight = 8, ///< The right edge of the anchor rectangle
     };
     Q_ENUM(Anchor);
     Q_DECLARE_FLAGS(Anchors, Anchor)
