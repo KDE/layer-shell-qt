@@ -32,10 +32,10 @@ include(GenerateExportHeader)
 include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 
-find_package(WaylandScanner)
-find_package(QtWaylandScanner)
+find_package(WaylandScanner REQUIRED)
+find_package(QtWaylandScanner REQUIRED)
 find_package(Wayland 1.3 COMPONENTS Client Server)
-find_package(WaylandProtocols)
+find_package(WaylandProtocols REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(XKBCOMMON xkbcommon REQUIRED IMPORTED_TARGET)
