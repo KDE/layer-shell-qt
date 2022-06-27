@@ -27,7 +27,6 @@ public:
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityExclusive;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
-    QWaylandLayerSurface *getSurface() const;
     QPointer<QScreen> desiredOutput;
 };
 
@@ -41,9 +40,7 @@ Window::~Window()
 void Window::setAnchors(Anchors anchors)
 {
     d->anchors = anchors;
-    if (auto surface = d->getSurface()) {
-        surface->setAnchor(anchors);
-    }
+    Q_EMIT anchorsChanged();
 }
 
 Window::Anchors Window::anchors() const
@@ -54,9 +51,7 @@ Window::Anchors Window::anchors() const
 void Window::setExclusiveZone(int32_t zone)
 {
     d->exclusionZone = zone;
-    if (auto surface = d->getSurface()) {
-        surface->setExclusiveZone(zone);
-    }
+    Q_EMIT exclusionZoneChanged();
 }
 
 int32_t Window::exclusionZone() const
@@ -67,9 +62,7 @@ int32_t Window::exclusionZone() const
 void Window::setMargins(const QMargins &margins)
 {
     d->margins = margins;
-    if (auto surface = d->getSurface()) {
-        surface->setMargins(margins);
-    }
+    Q_EMIT marginsChanged();
 }
 
 QMargins Window::margins() const
@@ -80,9 +73,7 @@ QMargins Window::margins() const
 void Window::setKeyboardInteractivity(KeyboardInteractivity interactivity)
 {
     d->keyboardInteractivity = interactivity;
-    if (auto surface = d->getSurface()) {
-        surface->setKeyboardInteractivity(interactivity);
-    }
+    Q_EMIT keyboardInteractivityChanged();
 }
 
 Window::KeyboardInteractivity Window::keyboardInteractivity() const
@@ -93,9 +84,6 @@ Window::KeyboardInteractivity Window::keyboardInteractivity() const
 void Window::setLayer(Layer layer)
 {
     d->layer = layer;
-    if (auto surface = d->getSurface()) {
-        surface->setLayer(layer);
-    }
 }
 
 void Window::setScope(const QString &scope)
@@ -138,22 +126,4 @@ Window *Window::get(QWindow *window)
         return layerShellWindow;
     }
     return new Window(window);
-}
-
-QWaylandLayerSurface *WindowPrivate::getSurface() const
-{
-    if (!parentWindow) {
-        return nullptr;
-    }
-    auto ww = dynamic_cast<QtWaylandClient::QWaylandWindow *>(parentWindow->handle());
-    if (!ww) {
-        qCDebug(LAYERSHELLQT) << "window not a wayland window" << parentWindow;
-        return nullptr;
-    }
-    QWaylandLayerSurface *s = qobject_cast<QWaylandLayerSurface *>(ww->shellSurface());
-    if (!s) {
-        qCDebug(LAYERSHELLQT) << "window not using wlr-layer-shell" << parentWindow << ww->shellSurface();
-        return nullptr;
-    }
-    return s;
 }
