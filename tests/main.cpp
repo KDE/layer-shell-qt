@@ -51,7 +51,8 @@ class BasicWindow : public QRasterWindow
 
 int main(int argc, char **argv)
 {
-    Shell::useLayerShell();
+//    Shell::useLayerShell();
+    qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", "1");
 
     QGuiApplication app(argc, argv);
 

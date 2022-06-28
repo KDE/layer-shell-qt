@@ -6,6 +6,7 @@
 
 #include "window.h"
 #include "../qwaylandlayersurface_p.h"
+#include "../qwaylandlayershellintegration_p.h"
 #include <layershellqt_logging.h>
 #include <private/qwaylandshellsurface_p.h>
 #include <private/qwaylandwindow_p.h>
@@ -117,6 +118,23 @@ Window::Window(QWindow *window)
     , d(new WindowPrivate(window))
 {
     s_map.insert(d->parentWindow, this);
+
+    //BEGIN Compat mode
+    window->winId();
+    window->setFlag(Qt::BypassWindowManagerHint);
+
+    auto ww = dynamic_cast<QtWaylandClient::QWaylandWindow *>(d->parentWindow->handle());
+    if (!ww) {
+        qCDebug(LAYERSHELLQT) << "window not a wayland window" << d->parentWindow;
+        return;
+    }
+    QWaylandLayerShellIntegration shellIntegration;
+    shellIntegration.initialize(ww->display());
+    shellIntegration.createShellSurface(ww);
+    // we can't block for configure events
+    // a round trip should mean we'll have one by the time we attach the buffer
+    ww->display()->forceRoundTrip();
+    //END compat mode
 }
 
 Window *Window::get(QWindow *window)
