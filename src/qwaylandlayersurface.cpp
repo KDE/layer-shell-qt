@@ -36,15 +36,31 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandC
         }
     }
     init(shell->get_layer_surface(window->waylandSurface()->object(), output, interface->layer(), interface->scope()));
-
-    Window::Anchors anchors = interface->anchors();
+    connect(interface, &Window::layerChanged, this, [this, interface]() {
+        setLayer(interface->layer());
+    });
 
     set_anchor(interface->anchors());
-    setMargins(interface->margins());
-    setKeyboardInteractivity(interface->keyboardInteractivity());
+    connect(interface, &Window::anchorsChanged, this, [this, interface]() {
+        set_anchor(interface->anchors());
+    });
     setExclusiveZone(interface->exclusionZone());
+    connect(interface, &Window::exclusionZoneChanged, this, [this, interface]() {
+        setExclusiveZone(interface->exclusionZone());
+    });
+
+    setMargins(interface->margins());
+    connect(interface, &Window::marginsChanged, this, [this, interface]() {
+        setMargins(interface->margins());
+    });
+
+    setKeyboardInteractivity(interface->keyboardInteractivity());
+    connect(interface, &Window::keyboardInteractivityChanged, this, [this, interface]() {
+        setKeyboardInteractivity(interface->keyboardInteractivity());
+    });
 
     QSize size = window->surfaceSize();
+    const Window::Anchors anchors = interface->anchors();
     if ((anchors & Window::AnchorLeft) && (anchors & Window::AnchorRight)) {
         size.setWidth(0);
     }

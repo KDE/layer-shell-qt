@@ -93,6 +93,13 @@ public:
      */
     static Window *get(QWindow *window);
 
+Q_SIGNALS:
+    void anchorsChanged();
+    void exclusionZoneChanged();
+    void marginsChanged();
+    void keyboardInteractivityChanged();
+    void layerChanged();
+
 private:
     Window(QWindow *window);
     QScopedPointer<WindowPrivate> d;
