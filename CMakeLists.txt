@@ -56,7 +56,7 @@ kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 add_subdirectory(src)
 add_subdirectory(tests)
 
-set(CMAKECONFIG_INSTALL_DIR ${KDE_INSTALL_LIBDIR}/cmake/LayerShellQt)
+set(CMAKECONFIG_INSTALL_DIR ${KDE_INSTALL_CMAKEPACKAGEDIR}/LayerShellQt)
 install(EXPORT LayerShellQtTargets
         NAMESPACE LayerShellQt::
         DESTINATION ${CMAKECONFIG_INSTALL_DIR}
