@@ -5,10 +5,14 @@
  */
 
 #include "window.h"
+#include "../qwaylandlayershellintegration_p.h"
+
 #include <layershellqt_logging.h>
 
 #include <QPointer>
 #include <optional>
+
+#include <QtWaylandClient/private/qwaylandwindow_p.h>
 
 using namespace LayerShellQt;
 
@@ -122,6 +126,27 @@ Window::Window(QWindow *window)
     , d(new WindowPrivate(window))
 {
     s_map.insert(d->parentWindow, this);
+
+    window->create();
+
+    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
+    if (!waylandWindow) {
+        qCWarning(LAYERSHELLQT) << window << "is not a wayland window. Not creating zwlr_layer_surface";
+        return;
+    }
+
+    static QWaylandLayerShellIntegration *shellIntegration = nullptr;
+    if (!shellIntegration) {
+        shellIntegration = new QWaylandLayerShellIntegration();
+        if (!shellIntegration->initialize(waylandWindow->display())) {
+            delete shellIntegration;
+            shellIntegration = nullptr;
+            qCWarning(LAYERSHELLQT) << "Failed to initialize layer-shell integration, possibly because compositor does not support the layer-shell protocol";
+            return;
+        }
+    }
+
+    waylandWindow->setShellIntegration(shellIntegration);
 }
 
 Window *Window::get(QWindow *window)

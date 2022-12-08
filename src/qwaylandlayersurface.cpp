@@ -5,9 +5,8 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "interfaces/shell.h"
+#include "interfaces/window.h"
 #include "layershellqt_logging.h"
-#include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
 
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
@@ -16,7 +15,7 @@
 
 namespace LayerShellQt
 {
-QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShell *shell, QtWaylandClient::QWaylandWindow *window)
+QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
 {
