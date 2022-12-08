@@ -8,23 +8,20 @@
 #ifndef _LAYERSHELL_H
 #define _LAYERSHELL_H
 
+#include "layershellqt_export.h"
+
 #include <wayland-client.h>
 
 #include <QtWaylandClient/private/qwaylandshellintegration_p.h>
 #include <qwayland-wlr-layer-shell-unstable-v1.h>
 
-#include "qwaylandlayersurface_p.h"
-
 namespace LayerShellQt
 {
-class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QtWayland::zwlr_layer_shell_v1
+class LAYERSHELLQT_EXPORT QWaylandLayerShell : public QWaylandClientExtensionTemplate<QWaylandLayerShell>, public QtWayland::zwlr_layer_shell_v1
 {
 public:
-    QWaylandLayerShell(::wl_registry *registry, uint32_t id, uint32_t version);
+    QWaylandLayerShell();
     ~QWaylandLayerShell() override;
-
-    QWaylandLayerSurface *createLayerSurface(QtWaylandClient::QWaylandWindow *window);
-    // TODO: Popups
 };
 
 }

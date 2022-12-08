@@ -5,10 +5,14 @@
  */
 
 #include "window.h"
+#include "../qwaylandlayershellintegration_p.h"
+
 #include <layershellqt_logging.h>
 
 #include <QPointer>
 #include <optional>
+
+#include <QtWaylandClient/private/qwaylandwindow_p.h>
 
 using namespace LayerShellQt;
 
@@ -121,6 +125,18 @@ Window::Window(QWindow *window)
     : QObject(window)
     , d(new WindowPrivate(window))
 {
+    window->winId(); // ensure that the platform window is created
+
+    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
+    if (!waylandWindow) {
+        return;
+    }
+
+    static QWaylandLayerShellIntegration *s_integration = new QWaylandLayerShellIntegration();
+    if (waylandWindow->shellIntegration() != s_integration) {
+        waylandWindow->setShellIntegration(s_integration);
+    }
+
     s_map.insert(d->parentWindow, this);
 }
 

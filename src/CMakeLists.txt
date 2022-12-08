@@ -51,7 +51,6 @@ ecm_generate_headers(LayerShellQt_HEADERS
     REQUIRED_HEADERS LayerShellQt_HEADERS
 )
 
-
 generate_export_header(LayerShellQtInterface
     BASE_NAME LayerShellQtInterface
     EXPORT_MACRO_NAME LAYERSHELLQT_EXPORT
