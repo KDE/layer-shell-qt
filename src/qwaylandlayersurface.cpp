@@ -5,7 +5,7 @@
  *   SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "interfaces/shell.h"
+#include "interfaces/window.h"
 #include "layershellqt_logging.h"
 #include "qwaylandlayershell_p.h"
 #include "qwaylandlayersurface_p.h"
