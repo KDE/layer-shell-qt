@@ -23,7 +23,7 @@ ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
         layershellqt
 )
 
-target_sources(LayerShellQtInterface PRIVATE qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
+target_sources(LayerShellQtInterface PRIVATE qwaylandlayersurface.cpp interfaces/window.cpp interfaces/window.h interfaces/shell.cpp interfaces/shell.h qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
 target_link_libraries(LayerShellQtInterface PRIVATE Qt::Gui Qt::WaylandClientPrivate Wayland::Client PkgConfig::XKBCOMMON)
 if (TARGET Qt::XkbCommonSupportPrivate)
     target_link_libraries(LayerShellQtInterface PRIVATE Qt::XkbCommonSupportPrivate)
