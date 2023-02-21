@@ -8,6 +8,7 @@
 #include <layershellqt_logging.h>
 
 #include <QPointer>
+#include <optional>
 
 using namespace LayerShellQt;
 
@@ -26,7 +27,7 @@ public:
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityExclusive;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
-    QPointer<QScreen> desiredOutput;
+    std::optional<QPointer<QScreen>> desiredOutput;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -103,7 +104,12 @@ Window::Layer Window::layer() const
 
 QScreen *Window::desiredOutput() const
 {
-    return d->desiredOutput;
+    // Don't use .value_or here to avoid a temporary QPointer
+    if (d->desiredOutput.has_value()) {
+        return d->desiredOutput.value();
+    }
+
+    return d->parentWindow->screen();
 }
 
 void Window::setDesiredOutput(QScreen *output)
