@@ -23,9 +23,8 @@ QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell
     Q_ASSERT(interface);
 
     wl_output *output = nullptr;
-    QScreen *screen = interface->desiredOutput();
-    if (screen) {
-        auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(screen->handle());
+    if (interface->screenConfiguration() == Window::ScreenFromQWindow) {
+        auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(window->window()->screen()->handle());
         // Qt will always assign a screen to a window, but if the compositor has no screens available a dummy QScreen object is created
         // this will not cast to a QWaylandScreen
         if (!waylandScreen) {

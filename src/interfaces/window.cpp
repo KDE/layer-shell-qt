@@ -34,7 +34,7 @@ public:
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityExclusive;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
-    std::optional<QPointer<QScreen>> desiredOutput;
+    Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -109,19 +109,14 @@ Window::Layer Window::layer() const
     return d->layer;
 }
 
-QScreen *Window::desiredOutput() const
+Window::ScreenConfiguration Window::screenConfiguration() const
 {
-    // Don't use .value_or here to avoid a temporary QPointer
-    if (d->desiredOutput.has_value()) {
-        return d->desiredOutput.value();
-    }
-
-    return d->parentWindow->screen();
+    return d->screenConfiguration;
 }
 
-void Window::setDesiredOutput(QScreen *output)
+void Window::setScreenConfiguration(Window::ScreenConfiguration screenConfiguration)
 {
-    d->desiredOutput = output;
+    d->screenConfiguration = screenConfiguration;
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)

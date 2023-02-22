@@ -58,6 +58,17 @@ public:
     };
     Q_ENUM(KeyboardInteractivity)
 
+    /**
+     * This enum type is used to specify which screen to place the surface on.
+     * ScreenFromQWindow (the default) reads QWindow::screen() while ScreenFromCompositor
+     * passes nil and lets the compositor decide.
+     */
+    enum ScreenConfiguration {
+        ScreenFromQWindow = 0,
+        ScreenFromCompositor = 1,
+    };
+    Q_ENUM(ScreenConfiguration)
+
     void setAnchors(Anchors anchor);
     Anchors anchors() const;
 
@@ -73,13 +84,8 @@ public:
     void setLayer(Layer layer);
     Layer layer() const;
 
-    /**
-     * If set, the compositor will try to put the window on the given screen.
-     * If its not set, then the compositor will decide where to put the window.
-     * Under normal circumstances, this should be the active output.
-     */
-    void setDesiredOutput(QScreen *output);
-    QScreen *desiredOutput() const;
+    void setScreenConfiguration(ScreenConfiguration screenConfiguration);
+    ScreenConfiguration screenConfiguration() const;
 
     /**
      * Sets a string based identifier for this window.
