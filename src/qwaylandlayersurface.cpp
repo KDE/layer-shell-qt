@@ -98,6 +98,19 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     }
 }
 
+void QWaylandLayerSurface::attachPopup(QWaylandShellSurface *popup)
+{
+    std::any anyRole = popup->surfaceRole();
+
+    if (auto role = std::any_cast<::xdg_popup *>(&anyRole)) {
+        get_popup(*role);
+    } else {
+        qCWarning(LAYERSHELLQT) << "Cannot attach popup of unknown type";
+    }
+
+    QWaylandShellSurface::attachPopup(popup);
+}
+
 void QWaylandLayerSurface::applyConfigure()
 {
     window()->resizeFromApplyConfigure(m_pendingSize);

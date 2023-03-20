@@ -36,6 +36,7 @@ public:
     void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);
 
+    void attachPopup(QWaylandShellSurface *popup) override;
     void applyConfigure() override;
 
 private:
