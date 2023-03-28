@@ -41,7 +41,7 @@ T stringToEnum(QMetaEnum metaEnum, const QString &str)
 
 class BasicWindow : public QRasterWindow
 {
-    void paintEvent(QPaintEvent *)
+    void paintEvent(QPaintEvent *) override
     {
         QPainter p(this);
         p.fillRect(QRect(0, 0, width(), height()), Qt::red);
