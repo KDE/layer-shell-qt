@@ -39,6 +39,7 @@ public:
     void setLayer(uint32_t layer);
 
     void applyConfigure() override;
+    void setWindowGeometry(const QRect &geometry) override;
 
 private:
     void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;

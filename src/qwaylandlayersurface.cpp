@@ -140,4 +140,20 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
         set_layer(layer);
 }
 
+void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
+{
+    LayerShellQt::Window *interface = Window::get(window()->window());
+    const bool horizontallyConstrained = interface->anchors() & (Window::AnchorLeft & Window::AnchorRight);
+    const bool verticallyConstrained = interface->anchors() & (Window::AnchorTop & Window::AnchorBottom);
+
+    QSize size = geometry.size();
+    if (horizontallyConstrained) {
+        size.setWidth(0);
+    }
+    if (verticallyConstrained) {
+        size.setHeight(0);
+    }
+    set_size(size.width(), size.height());
+}
+
 }
