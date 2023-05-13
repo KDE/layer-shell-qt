@@ -91,6 +91,7 @@ Window::KeyboardInteractivity Window::keyboardInteractivity() const
 void Window::setLayer(Layer layer)
 {
     d->layer = layer;
+    Q_EMIT layerChanged();
 }
 
 void Window::setScope(const QString &scope)
