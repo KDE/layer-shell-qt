@@ -35,6 +35,7 @@ public:
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
+    bool closeOnDismissed = true;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -118,6 +119,16 @@ Window::ScreenConfiguration Window::screenConfiguration() const
 void Window::setScreenConfiguration(Window::ScreenConfiguration screenConfiguration)
 {
     d->screenConfiguration = screenConfiguration;
+}
+
+bool Window::closeOnDismissed() const
+{
+    return d->closeOnDismissed;
+}
+
+void Window::setCloseOnDismissed(bool close)
+{
+    d->closeOnDismissed = close;
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)

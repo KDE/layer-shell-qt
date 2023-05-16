@@ -17,6 +17,8 @@
 namespace LayerShellQt
 {
 
+class Window;
+
 class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylandShellSurface, public QtWayland::zwlr_layer_surface_v1
 {
     Q_OBJECT
@@ -45,6 +47,7 @@ private:
     void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_closed() override;
 
+    LayerShellQt::Window *m_interface;
     QSize m_pendingSize;
     bool m_configured = false;
 };

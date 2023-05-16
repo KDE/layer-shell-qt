@@ -98,6 +98,15 @@ public:
     QString scope() const;
 
     /**
+     * Whether the QWindow should be closed when the layer surface is dismissed by the compositor.
+     * For example, if the associated screen has been removed.
+     *
+     * This can be used to map the window on another screen.
+     */
+    void setCloseOnDismissed(bool close);
+    bool closeOnDismissed() const;
+
+    /**
      * Gets the LayerShell Window for a given Qt Window
      * Ownership is not transferred
      */

@@ -18,12 +18,10 @@ namespace LayerShellQt
 QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
+    , m_interface(Window::get(window->window()))
 {
-    LayerShellQt::Window *interface = Window::get(window->window());
-    Q_ASSERT(interface);
-
     wl_output *output = nullptr;
-    if (interface->screenConfiguration() == Window::ScreenFromQWindow) {
+    if (m_interface->screenConfiguration() == Window::ScreenFromQWindow) {
         auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(window->window()->screen()->handle());
         // Qt will always assign a screen to a window, but if the compositor has no screens available a dummy QScreen object is created
         // this will not cast to a QWaylandScreen
@@ -33,32 +31,32 @@ QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell
             output = waylandScreen->output();
         }
     }
-    init(shell->get_layer_surface(window->waylandSurface()->object(), output, interface->layer(), interface->scope()));
-    connect(interface, &Window::layerChanged, this, [this, interface]() {
-        setLayer(interface->layer());
+    init(shell->get_layer_surface(window->waylandSurface()->object(), output, m_interface->layer(), m_interface->scope()));
+    connect(m_interface, &Window::layerChanged, this, [this]() {
+        setLayer(m_interface->layer());
     });
 
-    set_anchor(interface->anchors());
-    connect(interface, &Window::anchorsChanged, this, [this, interface]() {
-        set_anchor(interface->anchors());
+    set_anchor(m_interface->anchors());
+    connect(m_interface, &Window::anchorsChanged, this, [this]() {
+        set_anchor(m_interface->anchors());
     });
-    setExclusiveZone(interface->exclusionZone());
-    connect(interface, &Window::exclusionZoneChanged, this, [this, interface]() {
-        setExclusiveZone(interface->exclusionZone());
-    });
-
-    setMargins(interface->margins());
-    connect(interface, &Window::marginsChanged, this, [this, interface]() {
-        setMargins(interface->margins());
+    setExclusiveZone(m_interface->exclusionZone());
+    connect(m_interface, &Window::exclusionZoneChanged, this, [this]() {
+        setExclusiveZone(m_interface->exclusionZone());
     });
 
-    setKeyboardInteractivity(interface->keyboardInteractivity());
-    connect(interface, &Window::keyboardInteractivityChanged, this, [this, interface]() {
-        setKeyboardInteractivity(interface->keyboardInteractivity());
+    setMargins(m_interface->margins());
+    connect(m_interface, &Window::marginsChanged, this, [this]() {
+        setMargins(m_interface->margins());
+    });
+
+    setKeyboardInteractivity(m_interface->keyboardInteractivity());
+    connect(m_interface, &Window::keyboardInteractivityChanged, this, [this]() {
+        setKeyboardInteractivity(m_interface->keyboardInteractivity());
     });
 
     QSize size = window->surfaceSize();
-    const Window::Anchors anchors = interface->anchors();
+    const Window::Anchors anchors = m_interface->anchors();
     if ((anchors & Window::AnchorLeft) && (anchors & Window::AnchorRight)) {
         size.setWidth(0);
     }
@@ -77,7 +75,9 @@ QWaylandLayerSurface::~QWaylandLayerSurface()
 
 void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
 {
-    window()->window()->close();
+    if (m_interface->closeOnDismissed()) {
+        window()->window()->close();
+    }
 }
 
 void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
@@ -142,9 +142,8 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
 
 void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
 {
-    LayerShellQt::Window *interface = Window::get(window()->window());
-    const bool horizontallyConstrained = interface->anchors() & (Window::AnchorLeft & Window::AnchorRight);
-    const bool verticallyConstrained = interface->anchors() & (Window::AnchorTop & Window::AnchorBottom);
+    const bool horizontallyConstrained = m_interface->anchors() & (Window::AnchorLeft & Window::AnchorRight);
+    const bool verticallyConstrained = m_interface->anchors() & (Window::AnchorTop & Window::AnchorBottom);
 
     QSize size = geometry.size();
     if (horizontallyConstrained) {
