@@ -47,8 +47,10 @@ Window::~Window()
 
 void Window::setAnchors(Anchors anchors)
 {
-    d->anchors = anchors;
-    Q_EMIT anchorsChanged();
+    if (d->anchors != anchors) {
+        d->anchors = anchors;
+        Q_EMIT anchorsChanged();
+    }
 }
 
 Window::Anchors Window::anchors() const
@@ -58,8 +60,10 @@ Window::Anchors Window::anchors() const
 
 void Window::setExclusiveZone(int32_t zone)
 {
-    d->exclusionZone = zone;
-    Q_EMIT exclusionZoneChanged();
+    if (d->exclusionZone != zone) {
+        d->exclusionZone = zone;
+        Q_EMIT exclusionZoneChanged();
+    }
 }
 
 int32_t Window::exclusionZone() const
@@ -69,8 +73,10 @@ int32_t Window::exclusionZone() const
 
 void Window::setMargins(const QMargins &margins)
 {
-    d->margins = margins;
-    Q_EMIT marginsChanged();
+    if (d->margins != margins) {
+        d->margins = margins;
+        Q_EMIT marginsChanged();
+    }
 }
 
 QMargins Window::margins() const
@@ -80,8 +86,10 @@ QMargins Window::margins() const
 
 void Window::setKeyboardInteractivity(KeyboardInteractivity interactivity)
 {
-    d->keyboardInteractivity = interactivity;
-    Q_EMIT keyboardInteractivityChanged();
+    if (d->keyboardInteractivity != interactivity) {
+        d->keyboardInteractivity = interactivity;
+        Q_EMIT keyboardInteractivityChanged();
+    }
 }
 
 Window::KeyboardInteractivity Window::keyboardInteractivity() const
@@ -91,8 +99,10 @@ Window::KeyboardInteractivity Window::keyboardInteractivity() const
 
 void Window::setLayer(Layer layer)
 {
-    d->layer = layer;
-    Q_EMIT layerChanged();
+    if (d->layer != layer) {
+        d->layer = layer;
+        Q_EMIT layerChanged();
+    }
 }
 
 void Window::setScope(const QString &scope)
