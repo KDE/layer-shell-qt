@@ -32,11 +32,7 @@ include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
-if (QT_MAJOR_VERSION EQUAL "5")
-    find_package(Qt5XkbCommonSupport REQUIRED PRIVATE)
-    find_package(QtWaylandScanner REQUIRED)
-endif()
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
 find_package(WaylandScanner REQUIRED)
 find_package(Wayland 1.3 COMPONENTS Client Server)
 find_package(WaylandProtocols REQUIRED)
