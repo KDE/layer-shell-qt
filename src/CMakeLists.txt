@@ -4,15 +4,10 @@
 remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 add_library(LayerShellQtInterface)
-if (QT_MAJOR_VERSION EQUAL "5")
-    ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml BASENAME xdg-shell)
-    ecm_add_qtwayland_client_protocol(LAYER_SHELL_SOURCES PROTOCOL wlr-layer-shell-unstable-v1.xml BASENAME wlr-layer-shell-unstable-v1)
-else()
-    qt6_generate_wayland_protocol_client_sources(LayerShellQtInterface FILES
-        ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
-        ${CMAKE_CURRENT_SOURCE_DIR}/wlr-layer-shell-unstable-v1.xml
-    )
-endif()
+qt6_generate_wayland_protocol_client_sources(LayerShellQtInterface FILES
+    ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/wlr-layer-shell-unstable-v1.xml
+)
 
 ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
     HEADER
