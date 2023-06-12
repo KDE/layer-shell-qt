@@ -52,8 +52,8 @@ ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
-ecm_set_disabled_deprecation_versions(QT 5.15.2
-    KF 5.101
+ecm_set_disabled_deprecation_versions(QT 6.5
+    KF 5.240
 )
 
 add_subdirectory(src)
