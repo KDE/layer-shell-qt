@@ -25,6 +25,14 @@ class WindowPrivate;
 class LAYERSHELLQT_EXPORT Window : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(Anchors anchors READ anchors WRITE setAnchors NOTIFY anchorsChanged)
+    Q_PROPERTY(QString scope READ scope WRITE setScope)
+    Q_PROPERTY(QMargins margins READ margins WRITE setMargins NOTIFY marginsChanged)
+    Q_PROPERTY(qint32 exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
+    Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
+    Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
+    Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
+
 public:
     ~Window() override;
 
@@ -115,6 +123,8 @@ public:
 #if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
     static void attachPopup(QWindow *window, xdg_popup *popup);
 #endif
+
+    static Window *qmlAttachedProperties(QObject *object);
 
 Q_SIGNALS:
     void anchorsChanged();
