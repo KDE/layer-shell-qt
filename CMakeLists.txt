@@ -29,6 +29,7 @@ include(CMakePackageConfigHelpers)
 include(FeatureSummary)
 include(GenerateExportHeader)
 include(KDEClangFormat)
+include(ECMQmlModule)
 include(ECMQtDeclareLoggingCategory)
 
 

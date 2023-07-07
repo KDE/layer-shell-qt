@@ -24,7 +24,8 @@ ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
 )
 
 target_sources(LayerShellQtInterface PRIVATE qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp qwaylandlayershell.cpp ${LAYER_SHELL_SOURCES})
-target_link_libraries(LayerShellQtInterface PRIVATE Qt::Gui Qt::WaylandClientPrivate Wayland::Client PkgConfig::XKBCOMMON)
+target_link_libraries(LayerShellQtInterface PUBLIC Qt::Gui)
+target_link_libraries(LayerShellQtInterface PRIVATE Qt::WaylandClientPrivate Wayland::Client PkgConfig::XKBCOMMON)
 if (TARGET Qt::XkbCommonSupportPrivate)
     target_link_libraries(LayerShellQtInterface PRIVATE Qt::XkbCommonSupportPrivate)
 endif()
@@ -68,3 +69,5 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/LayerShellQt/layershellqt_export.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/LayerShellQt COMPONENT Devel
 )
+
+add_subdirectory(declarative)

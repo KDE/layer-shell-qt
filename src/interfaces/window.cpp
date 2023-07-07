@@ -126,9 +126,18 @@ Window::Window(QWindow *window)
 
 Window *Window::get(QWindow *window)
 {
+    if (!window) {
+        return nullptr;
+    }
+
     auto layerShellWindow = s_map.value(window);
     if (layerShellWindow) {
         return layerShellWindow;
     }
     return new Window(window);
+}
+
+Window *Window::qmlAttachedProperties(QObject *object)
+{
+    return get(qobject_cast<QWindow *>(object));
 }

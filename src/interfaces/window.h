@@ -21,7 +21,15 @@ class WindowPrivate;
 class LAYERSHELLQT_EXPORT Window : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int anchors READ anchors WRITE setAnchorsInt NOTIFY anchorsChanged)
+    Q_PROPERTY(QString scope READ scope WRITE setScope)
+    Q_PROPERTY(QMargins margins READ margins WRITE setMargins NOTIFY marginsChanged)
+    Q_PROPERTY(qint32 exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
+    Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
+    Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
+
 public:
+    Window(QWindow *window = nullptr);
     ~Window() override;
 
     enum Anchor {
@@ -87,11 +95,16 @@ public:
     void setScope(const QString &scope);
     QString scope() const;
 
+    /// Workaround needed for Qt 5 not to get confused with types, not necessary on Qt 6
+    void setAnchorsInt(int x) { setAnchors(Anchors(x)); }
+
     /**
      * Gets the LayerShell Window for a given Qt Window
      * Ownership is not transferred
      */
     static Window *get(QWindow *window);
+
+    static Window *qmlAttachedProperties(QObject *object);
 
 Q_SIGNALS:
     void anchorsChanged();
@@ -101,7 +114,6 @@ Q_SIGNALS:
     void layerChanged();
 
 private:
-    Window(QWindow *window);
     QScopedPointer<WindowPrivate> d;
 };
 
