@@ -115,6 +115,13 @@ public:
     bool closeOnDismissed() const;
 
     /**
+     * Sets the desired window size. This size indicates how much space the compositor is going
+     * to reserve for the window.
+     */
+    void setDesiredSize(const QSize &size);
+    QSize desiredSize() const;
+
+    /**
      * Gets the LayerShell Window for a given Qt Window
      * Ownership is not transferred
      */
@@ -132,6 +139,7 @@ Q_SIGNALS:
     void marginsChanged();
     void keyboardInteractivityChanged();
     void layerChanged();
+    void desiredSizeChanged();
 
 private:
     Window(QWindow *window);

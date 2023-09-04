@@ -55,17 +55,10 @@ QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell
         setKeyboardInteractivity(m_interface->keyboardInteractivity());
     });
 
-    QSize size = window->surfaceSize();
-    const Window::Anchors anchors = m_interface->anchors();
-    if ((anchors & Window::AnchorLeft) && (anchors & Window::AnchorRight)) {
-        size.setWidth(0);
-    }
-    if ((anchors & Window::AnchorTop) && (anchors & Window::AnchorBottom)) {
-        size.setHeight(0);
-    }
-    if (size.isValid() && size != QSize(0, 0)) {
-        set_size(size.width(), size.height());
-    }
+    setDesiredSize(m_interface->desiredSize());
+    connect(m_interface, &Window::desiredSizeChanged, this, [this]() {
+        setDesiredSize(m_interface->desiredSize());
+    });
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
@@ -141,18 +134,8 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
         set_layer(layer);
 }
 
-void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
+void QWaylandLayerSurface::setDesiredSize(const QSize &size)
 {
-    const bool horizontallyConstrained = m_interface->anchors() & (Window::AnchorLeft & Window::AnchorRight);
-    const bool verticallyConstrained = m_interface->anchors() & (Window::AnchorTop & Window::AnchorBottom);
-
-    QSize size = geometry.size();
-    if (horizontallyConstrained) {
-        size.setWidth(0);
-    }
-    if (verticallyConstrained) {
-        size.setHeight(0);
-    }
     set_size(size.width(), size.height());
 }
 

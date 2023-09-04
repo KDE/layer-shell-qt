@@ -29,6 +29,7 @@ public:
 
     QWindow *parentWindow;
     QString scope = QStringLiteral("window");
+    QSize desiredSize = QSize(0, 0);
     Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
     int32_t exclusionZone = 0;
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityNone;
@@ -139,6 +140,19 @@ bool Window::closeOnDismissed() const
 void Window::setCloseOnDismissed(bool close)
 {
     d->closeOnDismissed = close;
+}
+
+void Window::setDesiredSize(const QSize &size)
+{
+    if (d->desiredSize != size) {
+        d->desiredSize = size;
+        Q_EMIT desiredSizeChanged();
+    }
+}
+
+QSize Window::desiredSize() const
+{
+    return d->desiredSize;
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
