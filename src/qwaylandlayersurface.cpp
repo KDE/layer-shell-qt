@@ -136,7 +136,6 @@ void QWaylandLayerSurface::setKeyboardInteractivity(uint32_t interactivity)
 
 void QWaylandLayerSurface::setLayer(uint32_t layer)
 {
-    qDebug() << "wtfffffff" << layer << zwlr_layer_surface_v1_get_version(object()) << ZWLR_LAYER_SURFACE_V1_SET_LAYER_SINCE_VERSION;
     if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_LAYER_SINCE_VERSION)
         set_layer(layer);
 }
