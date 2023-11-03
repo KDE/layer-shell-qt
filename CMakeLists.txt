@@ -47,7 +47,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/layershellqt_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/LayerShellQtConfigVersion.cmake"
-                        SOVERSION 5)
+                        SOVERSION ${PROJECT_VERSION_MAJOR})
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
