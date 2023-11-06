@@ -10,6 +10,8 @@
 
 #include <wayland-client.h>
 
+#include "qwaylandlayershellintegration_p.h"
+
 #include "layershellqt_export.h"
 #include <QtWaylandClient/private/qwaylandshellsurface_p.h>
 #include <qwayland-wlr-layer-shell-unstable-v1.h>
@@ -23,7 +25,7 @@ class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylan
 {
     Q_OBJECT
 public:
-    QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell, QtWaylandClient::QWaylandWindow *window);
+    QWaylandLayerSurface(QWaylandLayerShellIntegration *shell, QtWaylandClient::QWaylandWindow *window);
     ~QWaylandLayerSurface() override;
 
     bool isExposed() const override
@@ -43,12 +45,18 @@ public:
     void applyConfigure() override;
     void setWindowGeometry(const QRect &geometry) override;
 
+    bool requestActivate() override;
+    void setXdgActivationToken(const QString &token) override;
+    void requestXdgActivationToken(quint32 serial) override;
+
 private:
     void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_closed() override;
 
+    QWaylandLayerShellIntegration *m_shell;
     LayerShellQt::Window *m_interface;
     QSize m_pendingSize;
+    QString m_activationToken;
     bool m_configured = false;
 };
 

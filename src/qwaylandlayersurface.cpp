@@ -8,16 +8,20 @@
 #include "interfaces/window.h"
 #include "layershellqt_logging.h"
 #include "qwaylandlayersurface_p.h"
+#include "qwaylandxdgactivationv1_p.h"
 
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
 #include <QtWaylandClient/private/qwaylandsurface_p.h>
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
 
+#include <QGuiApplication>
+
 namespace LayerShellQt
 {
-QWaylandLayerSurface::QWaylandLayerSurface(QtWayland::zwlr_layer_shell_v1 *shell, QtWaylandClient::QWaylandWindow *window)
+QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell, QtWaylandClient::QWaylandWindow *window)
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
+    , m_shell(shell)
     , m_interface(Window::get(window->window()))
 {
     wl_output *output = nullptr;
@@ -155,4 +159,54 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
     set_size(size.width(), size.height());
 }
 
+bool QWaylandLayerSurface::requestActivate()
+{
+    QWaylandXdgActivationV1 *activation = m_shell->activation();
+    if (!activation->isActive()) {
+        return false;
+    }
+    if (!m_activationToken.isEmpty()) {
+        activation->activate(m_activationToken, window()->wlSurface());
+        m_activationToken = {};
+        return true;
+    } else {
+        const auto focusWindow = QGuiApplication::focusWindow();
+        const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow*>(focusWindow->handle()) : window();
+        if (const auto seat = wlWindow->display()->lastInputDevice()) {
+            const auto tokenProvider = activation->requestXdgActivationToken(
+                wlWindow->display(), wlWindow->wlSurface(), 0, QString());
+            connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this,
+                    [this](const QString &token) {
+                        m_shell->activation()->activate(token, window()->wlSurface());
+                    });
+            connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
+            return true;
+        }
+    }
+    return false;
 }
+
+void QWaylandLayerSurface::setXdgActivationToken(const QString &token)
+{
+    m_activationToken = token;
+}
+
+void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
+{
+    QWaylandXdgActivationV1 *activation = m_shell->activation();
+    if (!activation->isActive()) {
+        return;
+    }
+    auto tokenProvider = activation->requestXdgActivationToken(
+        window()->display(), window()->wlSurface(), serial, QString());
+
+    connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this,
+            [this](const QString &token) {
+                Q_EMIT window()->xdgActivationTokenCreated(token);
+            });
+    connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
+
+}
+
+}
+

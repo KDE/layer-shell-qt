@@ -13,6 +13,8 @@
 #include <QtWaylandClient/private/qwaylandshellintegration_p.h>
 #include <qwayland-wlr-layer-shell-unstable-v1.h>
 
+class QWaylandXdgActivationV1;
+
 namespace LayerShellQt
 {
 
@@ -22,7 +24,10 @@ public:
     QWaylandLayerShellIntegration();
     ~QWaylandLayerShellIntegration() override;
 
+    QWaylandXdgActivationV1 *activation() const { return m_xdgActivation.data(); }
     QtWaylandClient::QWaylandShellSurface *createShellSurface(QtWaylandClient::QWaylandWindow *window) override;
+private:
+    QScopedPointer<QWaylandXdgActivationV1> m_xdgActivation;
 };
 
 }

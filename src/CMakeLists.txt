@@ -6,10 +6,11 @@ remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 add_library(LayerShellQtInterface)
 qt6_generate_wayland_protocol_client_sources(LayerShellQtInterface FILES
     ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+    ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/wlr-layer-shell-unstable-v1.xml
 )
 
-ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
+ecm_qt_declare_logging_category(LayerShellQtInterface
     HEADER
         layershellqt_logging.h
     IDENTIFIER
@@ -18,7 +19,14 @@ ecm_qt_declare_logging_category(LAYER_SHELL_SOURCES
         layershellqt
 )
 
-target_sources(LayerShellQtInterface PRIVATE qwaylandlayersurface.cpp interfaces/window.cpp interfaces/shell.cpp qwaylandlayershellintegration.cpp ${LAYER_SHELL_SOURCES})
+target_sources(LayerShellQtInterface PRIVATE
+    qwaylandxdgactivationv1.cpp
+    qwaylandlayersurface.cpp
+    qwaylandlayershellintegration.cpp
+    interfaces/window.cpp
+    interfaces/shell.cpp
+)
+
 target_link_libraries(LayerShellQtInterface PUBLIC Qt::Gui)
 target_link_libraries(LayerShellQtInterface PRIVATE Qt::WaylandClientPrivate Wayland::Client PkgConfig::XKBCOMMON)
 if (TARGET Qt::XkbCommonSupportPrivate)
