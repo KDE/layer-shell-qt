@@ -14,10 +14,6 @@
 
 #include "layershellqt_export.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
-struct xdg_popup;
-#endif
-
 namespace LayerShellQt
 {
 class WindowPrivate;
@@ -119,10 +115,6 @@ public:
      * Ownership is not transferred
      */
     static Window *get(QWindow *window);
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
-    static void attachPopup(QWindow *window, xdg_popup *popup);
-#endif
 
     static Window *qmlAttachedProperties(QObject *object);
 

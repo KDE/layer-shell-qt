@@ -6,9 +6,6 @@
 
 #include "window.h"
 #include "../qwaylandlayershellintegration_p.h"
-#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
-#include "../qwaylandlayersurface_p.h"
-#endif
 
 #include <layershellqt_logging.h>
 
@@ -140,21 +137,6 @@ void Window::setCloseOnDismissed(bool close)
 {
     d->closeOnDismissed = close;
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 6, 0)
-void Window::attachPopup(QWindow *window, xdg_popup *popup)
-{
-    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
-    if (!waylandWindow) {
-        return;
-    }
-
-    auto shellSurface = dynamic_cast<QWaylandLayerSurface *>(waylandWindow->shellSurface());
-    if (shellSurface) {
-        shellSurface->get_popup(popup);
-    }
-}
-#endif
 
 Window::Window(QWindow *window)
     : QObject(window)
