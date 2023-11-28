@@ -31,7 +31,7 @@ public:
     QString scope = QStringLiteral("window");
     Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
     int32_t exclusionZone = 0;
-    Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityExclusive;
+    Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityOnDemand;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
