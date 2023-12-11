@@ -54,6 +54,7 @@ private:
 
     QWaylandLayerShellIntegration *m_shell;
     LayerShellQt::Window *m_interface;
+    QtWaylandClient::QWaylandWindow *m_window;
     QSize m_pendingSize;
     QString m_activationToken;
     bool m_configured = false;

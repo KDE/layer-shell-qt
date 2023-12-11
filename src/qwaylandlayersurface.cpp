@@ -23,6 +23,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     , QtWayland::zwlr_layer_surface_v1()
     , m_shell(shell)
     , m_interface(Window::get(window->window()))
+    , m_window(window)
 {
     wl_output *output = nullptr;
     if (m_interface->screenConfiguration() == Window::ScreenFromQWindow) {
@@ -171,6 +172,7 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
         size.setHeight(0);
     }
     set_size(size.width(), size.height());
+    wl_display_roundtrip(m_window->display()->wl_display());
 }
 
 bool QWaylandLayerSurface::requestActivate()
