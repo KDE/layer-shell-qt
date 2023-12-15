@@ -100,7 +100,6 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     }
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
 void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *popup)
 {
     std::any anyRole = popup->surfaceRole();
@@ -111,7 +110,6 @@ void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *po
         qCWarning(LAYERSHELLQT) << "Cannot attach popup of unknown type";
     }
 }
-#endif
 
 void QWaylandLayerSurface::applyConfigure()
 {

@@ -32,9 +32,7 @@ public:
     {
         return m_configured;
     }
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
-#endif
 
     void setAnchor(uint32_t anchor);
     void setExclusiveZone(int32_t zone);
