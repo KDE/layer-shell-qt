@@ -28,6 +28,7 @@ public:
     QString scope = QStringLiteral("window");
     Window::Anchors anchors = {Window::AnchorTop | Window::AnchorBottom | Window::AnchorLeft | Window::AnchorRight};
     int32_t exclusionZone = 0;
+    Window::Anchor exclusiveEdge = Window::AnchorNone;
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityOnDemand;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
@@ -66,6 +67,21 @@ void Window::setExclusiveZone(int32_t zone)
 int32_t Window::exclusionZone() const
 {
     return d->exclusionZone;
+}
+
+void Window::setExclusiveEdge(Window::Anchor edge)
+{
+    if (d->exclusiveEdge == edge) {
+        return;
+    }
+
+    d->exclusiveEdge = edge;
+    Q_EMIT exclusiveEdgeChanged();
+}
+
+Window::Anchor Window::exclusiveEdge() const
+{
+    return d->exclusiveEdge;
 }
 
 void Window::setMargins(const QMargins &margins)
