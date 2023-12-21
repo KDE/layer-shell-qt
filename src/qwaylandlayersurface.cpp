@@ -119,6 +119,7 @@ void QWaylandLayerSurface::applyConfigure()
 void QWaylandLayerSurface::setAnchor(uint anchor)
 {
     set_anchor(anchor);
+    setWindowGeometry(window()->windowContentGeometry());
 }
 
 void QWaylandLayerSurface::setExclusiveZone(int32_t zone)
@@ -144,8 +145,8 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
 
 void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
 {
-    const bool horizontallyConstrained = m_interface->anchors() & (Window::AnchorLeft & Window::AnchorRight);
-    const bool verticallyConstrained = m_interface->anchors() & (Window::AnchorTop & Window::AnchorBottom);
+    const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
+    const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
 
     QSize size = geometry.size();
     if (horizontallyConstrained) {
