@@ -387,7 +387,9 @@
       <arg name="layer" type="uint" enum="zwlr_layer_shell_v1.layer" summary="layer to move this surface to"/>
     </request>
 
-    <request name="set_exclusive_edge">
+    <!-- Version 5 additions -->
+
+    <request name="set_exclusive_edge" since="5">
       <description summary="set the edge the exclusive zone will be applied to">
         Requests an edge for the exclusive zone to apply.
         The edge must be one the surface is anchored to, otherwise a protocol error will be raised.
