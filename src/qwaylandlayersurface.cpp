@@ -133,8 +133,9 @@ void QWaylandLayerSurface::setExclusiveZone(int32_t zone)
 
 void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
 {
-    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_EXCLUSIVE_EDGE_SINCE_VERSION)
+    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_EXCLUSIVE_EDGE_SINCE_VERSION) {
         set_exclusive_edge(edge);
+    }
 }
 
 void QWaylandLayerSurface::setMargins(const QMargins &margins)
