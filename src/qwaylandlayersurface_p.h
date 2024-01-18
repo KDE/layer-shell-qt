@@ -35,8 +35,7 @@ public:
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
     void setAnchor(uint32_t anchor);
-    void setExclusiveZone(int32_t zone);
-    void setExclusiveEdge(uint32_t edge);
+    void setExclusiveZone(const QSize &zone);
     void setMargins(const QMargins &margins);
     void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);

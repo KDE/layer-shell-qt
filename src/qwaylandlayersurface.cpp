@@ -48,10 +48,6 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     connect(m_interface, &Window::exclusionZoneChanged, this, [this]() {
         setExclusiveZone(m_interface->exclusionZone());
     });
-    setExclusiveEdge(m_interface->exclusiveEdge());
-    connect(m_interface, &Window::exclusiveEdgeChanged, this, [this]() {
-        setExclusiveEdge(m_interface->exclusiveEdge());
-    });
 
     setMargins(m_interface->margins());
     connect(m_interface, &Window::marginsChanged, this, [this]() {
@@ -126,16 +122,9 @@ void QWaylandLayerSurface::setAnchor(uint anchor)
     setWindowGeometry(window()->windowContentGeometry());
 }
 
-void QWaylandLayerSurface::setExclusiveZone(int32_t zone)
+void QWaylandLayerSurface::setExclusiveZone(const QSize &zone)
 {
-    set_exclusive_zone(zone);
-}
-
-void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
-{
-    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_EXCLUSIVE_EDGE_SINCE_VERSION) {
-        set_exclusive_edge(edge);
-    }
+    set_exclusive_zone(zone.width(), zone.height());
 }
 
 void QWaylandLayerSurface::setMargins(const QMargins &margins)

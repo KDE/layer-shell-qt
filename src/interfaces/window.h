@@ -24,7 +24,7 @@ class LAYERSHELLQT_EXPORT Window : public QObject
     Q_PROPERTY(Anchors anchors READ anchors WRITE setAnchors NOTIFY anchorsChanged)
     Q_PROPERTY(QString scope READ scope WRITE setScope)
     Q_PROPERTY(QMargins margins READ margins WRITE setMargins NOTIFY marginsChanged)
-    Q_PROPERTY(qint32 exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
+    Q_PROPERTY(QSize exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
     Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
     Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
@@ -77,11 +77,8 @@ public:
     void setAnchors(Anchors anchor);
     Anchors anchors() const;
 
-    void setExclusiveZone(int32_t zone);
-    int32_t exclusionZone() const;
-
-    void setExclusiveEdge(Window::Anchor edge);
-    Window::Anchor exclusiveEdge() const;
+    void setExclusiveZone(const QSize &zone);
+    QSize exclusionZone() const;
 
     void setMargins(const QMargins &margins);
     QMargins margins() const;
