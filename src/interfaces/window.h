@@ -33,6 +33,7 @@ public:
     ~Window() override;
 
     enum Anchor {
+        AnchorNone = 0,
         AnchorTop = 1, ///< The top edge of the anchor rectangle
         AnchorBottom = 2, ///< The bottom edge of the anchor rectangle
         AnchorLeft = 4, ///< The left edge of the anchor rectangle
@@ -79,6 +80,9 @@ public:
     void setExclusiveZone(int32_t zone);
     int32_t exclusionZone() const;
 
+    void setExclusiveEdge(Window::Anchor edge);
+    Window::Anchor exclusiveEdge() const;
+
     void setMargins(const QMargins &margins);
     QMargins margins() const;
 
@@ -121,6 +125,7 @@ public:
 Q_SIGNALS:
     void anchorsChanged();
     void exclusionZoneChanged();
+    void exclusiveEdgeChanged();
     void marginsChanged();
     void keyboardInteractivityChanged();
     void layerChanged();
