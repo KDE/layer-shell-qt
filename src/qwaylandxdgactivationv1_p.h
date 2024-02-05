@@ -1,5 +1,5 @@
 /** Copyright (C) 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
- *  SPDX-License-Identifier: LGPL-3.0-or-later
+ *  SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  */
 
 #ifndef QWAYLANDXDGACTIVATIONV1_P_H
