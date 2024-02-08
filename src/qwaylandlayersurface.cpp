@@ -16,6 +16,31 @@
 
 #include <QGuiApplication>
 
+namespace
+{
+template<typename T>
+concept QWaylandWindowNewV6Type = requires(T t) { t.sendRecursiveExposeEvent(); };
+
+template<typename T>
+concept QWaylandWindowOldV6Type = requires(T t) { t.handleExpose(QRect()); } && !requires(T t) { t.sendRecursiveExposeEvent(); };
+
+class ExposeHelper
+{
+public:
+    template<QWaylandWindowOldV6Type T>
+    [[maybe_unused]] ExposeHelper(T *window, const QSize &pendingSize)
+    {
+        window->handleExpose(QRect(QPoint(), pendingSize));
+    }
+
+    template<QWaylandWindowNewV6Type T>
+    [[maybe_unused]] ExposeHelper(T *window, [[maybe_unused]] const QSize &pendingSize)
+    {
+        window->sendRecursiveExposeEvent();
+    }
+};
+}
+
 namespace LayerShellQt
 {
 QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell, QtWaylandClient::QWaylandWindow *window)
@@ -92,7 +117,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     if (!m_configured) {
         m_configured = true;
         window()->resizeFromApplyConfigure(m_pendingSize);
-        window()->handleExpose(QRect(QPoint(), m_pendingSize));
+        ExposeHelper helper(window(), m_pendingSize);
     } else {
         // Later configures are resizes, so we have to queue them up for a time when we
         // are not painting to the window.
