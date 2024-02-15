@@ -79,6 +79,9 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
 {
+    if (m_waitForSyncCallback) {
+        wl_callback_destroy(m_waitForSyncCallback);
+    }
     destroy();
 }
 
@@ -97,11 +100,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     if (!m_configured) {
         m_configured = true;
         window()->resizeFromApplyConfigure(m_pendingSize);
-#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
-        window()->handleExpose(QRect(QPoint(), m_pendingSize));
-#else
-        window()->sendRecursiveExposeEvent();
-#endif
+        sendExpose();
     } else {
         // Later configures are resizes, so we have to queue them up for a time when we
         // are not painting to the window.
@@ -161,6 +160,11 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
 
 void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
 {
+    // if we are setting it to the last size we were configured at, we don't need to do anything
+    if (geometry.size() == m_pendingSize && !m_waitForSyncCallback) {
+        return;
+    }
+
     const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
     const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
 
@@ -172,7 +176,7 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
         size.setHeight(0);
     }
     set_size(size.width(), size.height());
-    wl_display_roundtrip(m_window->display()->wl_display());
+    requestWaylandSync();
 }
 
 bool QWaylandLayerSurface::requestActivate()
@@ -221,7 +225,43 @@ void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
                 Q_EMIT window()->xdgActivationTokenCreated(token);
             });
     connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
+}
 
+const wl_callback_listener QWaylandLayerSurface::syncCallbackListener = {
+    .done = [](void *data, struct wl_callback *callback, uint32_t time){
+        Q_UNUSED(time);
+        wl_callback_destroy(callback);
+        QWaylandLayerSurface *layerSurface = static_cast<QWaylandLayerSurface *>(data);
+        layerSurface->m_waitForSyncCallback = nullptr;
+        layerSurface->sendExpose();
+    }
+};
+
+void QWaylandLayerSurface::requestWaylandSync()
+{
+    if (m_waitForSyncCallback) {
+        return;
+    }
+
+    m_waitForSyncCallback = wl_display_sync(m_window->display()->wl_display());
+    wl_callback_add_listener(m_waitForSyncCallback, &syncCallbackListener, this);
+}
+
+void QWaylandLayerSurface::handleWaylandSyncDone()
+{
+    if (!window()->isExposed()) {
+        return;
+    }
+    sendExpose();
+}
+
+void QWaylandLayerSurface::sendExpose()
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+    window()->handleExpose(QRect(QPoint(), m_pendingSize));
+#else
+    window()->sendRecursiveExposeEvent();
+#endif
 }
 
 }
