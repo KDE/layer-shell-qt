@@ -161,6 +161,11 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
 
 void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
 {
+    // if we are setting it to the last size we were configured at, we don't need to do anything
+    if (geometry.size() == m_pendingSize) {
+        return;
+    }
+
     const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
     const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
 
