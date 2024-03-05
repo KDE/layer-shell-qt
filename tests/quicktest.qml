@@ -39,6 +39,7 @@ Item
         LayerShell.Window.anchors: LayerShell.Window.AnchorLeft
         LayerShell.Window.layer: LayerShell.Window.LayerTop
         LayerShell.Window.exclusionZone: width
+        LayerShell.Window.margins.left: 100
 
         width: 100
         height: 100
