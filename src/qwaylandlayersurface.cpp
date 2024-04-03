@@ -99,7 +99,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
 
     if (!m_configured) {
         m_configured = true;
-        window()->resizeFromApplyConfigure(m_pendingSize);
+        applyConfigure();
         sendExpose();
     } else {
         // Later configures are resizes, so we have to queue them up for a time when we
@@ -121,7 +121,9 @@ void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *po
 
 void QWaylandLayerSurface::applyConfigure()
 {
+    m_configuring = true;
     window()->resizeFromApplyConfigure(m_pendingSize);
+    m_configuring = false;
 }
 
 void QWaylandLayerSurface::setAnchor(uint anchor)
@@ -160,8 +162,7 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
 
 void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
 {
-    // if we are setting it to the last size we were configured at, we don't need to do anything
-    if (geometry.size() == m_pendingSize && !m_waitForSyncCallback) {
+    if (m_configuring) {
         return;
     }
 

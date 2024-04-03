@@ -62,6 +62,7 @@ private:
     QString m_activationToken;
 
     bool m_configured = false;
+    bool m_configuring = false;
 
     static const wl_callback_listener syncCallbackListener;
     struct wl_callback *m_waitForSyncCallback = nullptr;
