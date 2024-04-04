@@ -41,10 +41,12 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setLayer(m_interface->layer());
     });
 
-    set_anchor(m_interface->anchors());
+    setAnchor(m_interface->anchors());
     connect(m_interface, &Window::anchorsChanged, this, [this]() {
-        set_anchor(m_interface->anchors());
+        setAnchor(m_interface->anchors());
+        setDesiredSize(m_window->windowContentGeometry().size());
     });
+
     setExclusiveZone(m_interface->exclusionZone());
     connect(m_interface, &Window::exclusionZoneChanged, this, [this]() {
         setExclusiveZone(m_interface->exclusionZone());
@@ -64,17 +66,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setKeyboardInteractivity(m_interface->keyboardInteractivity());
     });
 
-    QSize size = window->surfaceSize();
-    const Window::Anchors anchors = m_interface->anchors();
-    if ((anchors & Window::AnchorLeft) && (anchors & Window::AnchorRight)) {
-        size.setWidth(0);
-    }
-    if ((anchors & Window::AnchorTop) && (anchors & Window::AnchorBottom)) {
-        size.setHeight(0);
-    }
-    if (size.isValid() && size != QSize(0, 0)) {
-        set_size(size.width(), size.height());
-    }
+    setDesiredSize(window->surfaceSize());
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
@@ -126,10 +118,24 @@ void QWaylandLayerSurface::applyConfigure()
     m_configuring = false;
 }
 
+void QWaylandLayerSurface::setDesiredSize(const QSize &size)
+{
+    const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
+    const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
+
+    QSize effectiveSize = size;
+    if (horizontallyConstrained) {
+        effectiveSize.setWidth(0);
+    }
+    if (verticallyConstrained) {
+        effectiveSize.setHeight(0);
+    }
+    set_size(effectiveSize.width(), effectiveSize.height());
+}
+
 void QWaylandLayerSurface::setAnchor(uint anchor)
 {
     set_anchor(anchor);
-    setWindowGeometry(window()->windowContentGeometry());
 }
 
 void QWaylandLayerSurface::setExclusiveZone(int32_t zone)
@@ -166,17 +172,7 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
         return;
     }
 
-    const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
-    const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
-
-    QSize size = geometry.size();
-    if (horizontallyConstrained) {
-        size.setWidth(0);
-    }
-    if (verticallyConstrained) {
-        size.setHeight(0);
-    }
-    set_size(size.width(), size.height());
+    setDesiredSize(geometry.size());
     requestWaylandSync();
 }
 
