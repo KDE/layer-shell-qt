@@ -66,7 +66,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setKeyboardInteractivity(m_interface->keyboardInteractivity());
     });
 
-    setDesiredSize(window->surfaceSize());
+    setDesiredSize(window->windowContentGeometry().size());
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
