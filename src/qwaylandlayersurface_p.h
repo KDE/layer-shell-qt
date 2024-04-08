@@ -30,7 +30,7 @@ public:
 
     bool isExposed() const override
     {
-        return m_configured && !m_waitForSyncCallback;
+        return m_configured && m_waitForSyncCallbacks.isEmpty();
     }
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
@@ -64,11 +64,11 @@ private:
 
     bool m_configured = false;
     bool m_configuring = false;
+    bool m_hasPendingConfigureToApply = false;
 
     static const wl_callback_listener syncCallbackListener;
-    struct wl_callback *m_waitForSyncCallback = nullptr;
+    QList<struct wl_callback*> m_waitForSyncCallbacks;
 };
-
 }
 
 #endif

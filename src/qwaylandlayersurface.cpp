@@ -67,13 +67,15 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     });
 
     setDesiredSize(window->windowContentGeometry().size());
+    requestWaylandSync();
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
 {
-    if (m_waitForSyncCallback) {
-        wl_callback_destroy(m_waitForSyncCallback);
+    for (auto syncCallback: m_waitForSyncCallbacks) {
+        wl_callback_destroy(syncCallback);
     }
+    m_waitForSyncCallbacks.clear();
     destroy();
 }
 
@@ -89,6 +91,13 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     ack_configure(serial);
     m_pendingSize = QSize(width, height);
 
+    // because configure lacks a way to match it up with our resize requests
+    // we apply it only when our callback sync is complete
+    if (!m_waitForSyncCallbacks.isEmpty()) {
+        m_hasPendingConfigureToApply = true;
+        return;
+    }
+
     if (!m_configured) {
         m_configured = true;
         applyConfigure();
@@ -98,6 +107,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
         // are not painting to the window.
         window()->applyConfigureWhenPossible();
     }
+
 }
 
 void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *popup)
@@ -229,27 +239,36 @@ const wl_callback_listener QWaylandLayerSurface::syncCallbackListener = {
         Q_UNUSED(time);
         wl_callback_destroy(callback);
         QWaylandLayerSurface *layerSurface = static_cast<QWaylandLayerSurface *>(data);
-        layerSurface->m_waitForSyncCallback = nullptr;
-        layerSurface->sendExpose();
+        layerSurface->m_waitForSyncCallbacks.removeOne(callback);
+        layerSurface->handleWaylandSyncDone();
     }
 };
 
 void QWaylandLayerSurface::requestWaylandSync()
 {
-    if (m_waitForSyncCallback) {
-        return;
-    }
-
-    m_waitForSyncCallback = wl_display_sync(m_window->display()->wl_display());
-    wl_callback_add_listener(m_waitForSyncCallback, &syncCallbackListener, this);
+    auto syncCallback = wl_display_sync(m_window->display()->wl_display());
+    m_waitForSyncCallbacks.append(syncCallback);
+    wl_callback_add_listener(syncCallback, &syncCallbackListener, this);
 }
 
 void QWaylandLayerSurface::handleWaylandSyncDone()
 {
-    if (!window()->isExposed()) {
+    if (!window()->window()->isVisible() || !m_waitForSyncCallbacks.isEmpty()) {
         return;
     }
-    sendExpose();
+
+    if (m_hasPendingConfigureToApply) {
+        m_hasPendingConfigureToApply = false;
+        if (!m_configured) {
+            m_configured = true;
+            applyConfigure();
+            sendExpose();
+        } else {
+            // Later configures are resizes, so we have to queue them up for a time when we
+            // are not painting to the window.
+            window()->applyConfigureWhenPossible();
+        }
+    }
 }
 
 void QWaylandLayerSurface::sendExpose()
