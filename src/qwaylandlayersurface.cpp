@@ -88,6 +88,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
 
 void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
 {
+    qDebug() << "got configure";
     ack_configure(serial);
     m_pendingSize = QSize(width, height);
 
@@ -107,6 +108,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
         // are not painting to the window.
         window()->applyConfigureWhenPossible();
     }
+    qDebug() << "end got confiure";
 
 }
 
@@ -124,6 +126,7 @@ void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *po
 void QWaylandLayerSurface::applyConfigure()
 {
     m_configuring = true;
+    qDebug() << "resizing panel to " << m_pendingSize;
     window()->resizeFromApplyConfigure(m_pendingSize);
     m_configuring = false;
 }
@@ -140,6 +143,7 @@ void QWaylandLayerSurface::setDesiredSize(const QSize &size)
     if (verticallyConstrained) {
         effectiveSize.setHeight(0);
     }
+    qDebug() << "requesting size " << effectiveSize;
     set_size(effectiveSize.width(), effectiveSize.height());
 }
 
@@ -253,6 +257,7 @@ void QWaylandLayerSurface::requestWaylandSync()
 
 void QWaylandLayerSurface::handleWaylandSyncDone()
 {
+    qDebug() << "handle sync done";
     if (!window()->window()->isVisible() || !m_waitForSyncCallbacks.isEmpty()) {
         return;
     }
@@ -269,6 +274,7 @@ void QWaylandLayerSurface::handleWaylandSyncDone()
             window()->applyConfigureWhenPossible();
         }
     }
+    qDebug() << "end handle sync done";
 }
 
 void QWaylandLayerSurface::sendExpose()
