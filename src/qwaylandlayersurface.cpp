@@ -71,9 +71,6 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
 {
-    if (m_waitForSyncCallback) {
-        wl_callback_destroy(m_waitForSyncCallback);
-    }
     destroy();
 }
 
@@ -173,7 +170,6 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
     }
 
     setDesiredSize(geometry.size());
-    requestWaylandSync();
 }
 
 bool QWaylandLayerSurface::requestActivate()
@@ -222,34 +218,6 @@ void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
                 Q_EMIT window()->xdgActivationTokenCreated(token);
             });
     connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
-}
-
-const wl_callback_listener QWaylandLayerSurface::syncCallbackListener = {
-    .done = [](void *data, struct wl_callback *callback, uint32_t time){
-        Q_UNUSED(time);
-        wl_callback_destroy(callback);
-        QWaylandLayerSurface *layerSurface = static_cast<QWaylandLayerSurface *>(data);
-        layerSurface->m_waitForSyncCallback = nullptr;
-        layerSurface->sendExpose();
-    }
-};
-
-void QWaylandLayerSurface::requestWaylandSync()
-{
-    if (m_waitForSyncCallback) {
-        return;
-    }
-
-    m_waitForSyncCallback = wl_display_sync(m_window->display()->wl_display());
-    wl_callback_add_listener(m_waitForSyncCallback, &syncCallbackListener, this);
-}
-
-void QWaylandLayerSurface::handleWaylandSyncDone()
-{
-    if (!window()->isExposed()) {
-        return;
-    }
-    sendExpose();
 }
 
 void QWaylandLayerSurface::sendExpose()

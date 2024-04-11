@@ -30,7 +30,7 @@ public:
 
     bool isExposed() const override
     {
-        return m_configured && !m_waitForSyncCallback;
+        return m_configured;
     }
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
@@ -50,8 +50,6 @@ public:
     void requestXdgActivationToken(quint32 serial) override;
 
 private:
-    void requestWaylandSync();
-    void handleWaylandSyncDone();
     void sendExpose();
     void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_closed() override;
@@ -64,9 +62,6 @@ private:
 
     bool m_configured = false;
     bool m_configuring = false;
-
-    static const wl_callback_listener syncCallbackListener;
-    struct wl_callback *m_waitForSyncCallback = nullptr;
 };
 
 }
