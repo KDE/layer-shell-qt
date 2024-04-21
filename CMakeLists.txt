@@ -31,7 +31,7 @@ include(GenerateExportHeader)
 include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 include(ECMQmlModule)
-
+include(KDEGitCommitHooks)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
 find_package(WaylandScanner REQUIRED)
@@ -52,6 +52,8 @@ ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX LAYERSHELLQT
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
+
+kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
 ecm_set_disabled_deprecation_versions(QT 6.5
     KF 5.240
