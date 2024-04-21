@@ -32,5 +32,4 @@ QtWaylandClient::QWaylandShellSurface *QWaylandLayerShellIntegration::createShel
     return new QWaylandLayerSurface(this, window);
 }
 
-
 }

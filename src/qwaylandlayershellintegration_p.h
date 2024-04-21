@@ -18,14 +18,19 @@ class QWaylandXdgActivationV1;
 namespace LayerShellQt
 {
 
-class LAYERSHELLQT_EXPORT QWaylandLayerShellIntegration : public QtWaylandClient::QWaylandShellIntegrationTemplate<QWaylandLayerShellIntegration>, public QtWayland::zwlr_layer_shell_v1
+class LAYERSHELLQT_EXPORT QWaylandLayerShellIntegration : public QtWaylandClient::QWaylandShellIntegrationTemplate<QWaylandLayerShellIntegration>,
+                                                          public QtWayland::zwlr_layer_shell_v1
 {
 public:
     QWaylandLayerShellIntegration();
     ~QWaylandLayerShellIntegration() override;
 
-    QWaylandXdgActivationV1 *activation() const { return m_xdgActivation.data(); }
+    QWaylandXdgActivationV1 *activation() const
+    {
+        return m_xdgActivation.data();
+    }
     QtWaylandClient::QWaylandShellSurface *createShellSurface(QtWaylandClient::QWaylandWindow *window) override;
+
 private:
     QScopedPointer<QWaylandXdgActivationV1> m_xdgActivation;
 };

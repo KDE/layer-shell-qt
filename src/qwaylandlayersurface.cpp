@@ -184,14 +184,12 @@ bool QWaylandLayerSurface::requestActivate()
         return true;
     } else {
         const auto focusWindow = QGuiApplication::focusWindow();
-        const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow*>(focusWindow->handle()) : window();
+        const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow *>(focusWindow->handle()) : window();
         if (const auto seat = wlWindow->display()->lastInputDevice()) {
-            const auto tokenProvider = activation->requestXdgActivationToken(
-                wlWindow->display(), wlWindow->wlSurface(), 0, QString());
-            connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this,
-                    [this](const QString &token) {
-                        m_shell->activation()->activate(token, window()->wlSurface());
-                    });
+            const auto tokenProvider = activation->requestXdgActivationToken(wlWindow->display(), wlWindow->wlSurface(), 0, QString());
+            connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this, [this](const QString &token) {
+                m_shell->activation()->activate(token, window()->wlSurface());
+            });
             connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
             return true;
         }
@@ -210,13 +208,11 @@ void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
     if (!activation->isActive()) {
         return;
     }
-    auto tokenProvider = activation->requestXdgActivationToken(
-        window()->display(), window()->wlSurface(), serial, QString());
+    auto tokenProvider = activation->requestXdgActivationToken(window()->display(), window()->wlSurface(), serial, QString());
 
-    connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this,
-            [this](const QString &token) {
-                Q_EMIT window()->xdgActivationTokenCreated(token);
-            });
+    connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this, [this](const QString &token) {
+        Q_EMIT window()->xdgActivationTokenCreated(token);
+    });
     connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
 }
 
@@ -230,4 +226,3 @@ void QWaylandLayerSurface::sendExpose()
 }
 
 }
-
