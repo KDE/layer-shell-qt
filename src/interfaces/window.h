@@ -25,6 +25,7 @@ class LAYERSHELLQT_EXPORT Window : public QObject
     Q_PROPERTY(QString scope READ scope WRITE setScope)
     Q_PROPERTY(QMargins margins READ margins WRITE setMargins NOTIFY marginsChanged)
     Q_PROPERTY(qint32 exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
+    Q_PROPERTY(bool accomodateExclusiveZones READ accomodateExclusiveZones WRITE setAccomodateExclusiveZones NOTIFY accomodateExclusiveZonesChanged)
     Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
     Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
@@ -83,6 +84,9 @@ public:
     void setExclusiveEdge(Window::Anchor edge);
     Window::Anchor exclusiveEdge() const;
 
+    bool accomodateExclusiveZones() const;
+    void setAccomodateExclusiveZones(bool accomodate);
+
     void setMargins(const QMargins &margins);
     QMargins margins() const;
 
@@ -126,6 +130,7 @@ Q_SIGNALS:
     void anchorsChanged();
     void exclusionZoneChanged();
     void exclusiveEdgeChanged();
+    void accomodateExclusiveZonesChanged();
     void marginsChanged();
     void keyboardInteractivityChanged();
     void layerChanged();
