@@ -34,6 +34,7 @@ public:
     QMargins margins;
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
     bool closeOnDismissed = true;
+    bool accomodateExclusiveZones = true;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -82,6 +83,21 @@ void Window::setExclusiveEdge(Window::Anchor edge)
 Window::Anchor Window::exclusiveEdge() const
 {
     return d->exclusiveEdge;
+}
+
+bool Window::accomodateExclusiveZones() const
+{
+    return d->accomodateExclusiveZones;
+}
+
+void Window::setAccomodateExclusiveZones(bool accomodate)
+{
+    if (d->accomodateExclusiveZones == accomodate) {
+        return;
+    }
+
+    d->accomodateExclusiveZones = accomodate;
+    Q_EMIT accomodateExclusiveZonesChanged();
 }
 
 void Window::setMargins(const QMargins &margins)

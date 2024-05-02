@@ -15,7 +15,7 @@
 namespace LayerShellQt
 {
 QWaylandLayerShellIntegration::QWaylandLayerShellIntegration()
-    : QWaylandShellIntegrationTemplate<QWaylandLayerShellIntegration>(5)
+    : QWaylandShellIntegrationTemplate<QWaylandLayerShellIntegration>(6)
     , m_xdgActivation(new QWaylandXdgActivationV1)
 {
 }
