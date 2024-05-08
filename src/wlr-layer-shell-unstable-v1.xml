@@ -168,21 +168,24 @@
         Surfaces that do not wish to have an exclusive zone may instead specify
         how they should interact with surfaces that do. If set to zero, the
         surface indicates that it would like to be moved to avoid occluding
-        surfaces with a positive exclusive zone. If set to -1, the surface
-        indicates that it would not like to be moved to accommodate for other
-        surfaces, and the compositor should extend it all the way to the edges
-        it is anchored to.
+        surfaces with a positive exclusive zone.
 
         For example, a panel might set its exclusive zone to 10, so that
         maximized shell surfaces are not shown on top of it. A notification
         might set its exclusive zone to 0, so that it is moved to avoid
-        occluding the panel, but shell surfaces are shown underneath it. A
-        wallpaper or lock screen might set their exclusive zone to -1, so that
-        they stretch below or over the panel.
+        occluding the panel, but shell surfaces are shown underneath it.
 
         The default value is 0.
+        Since version 6 It must be a value of 0 or more, otherwise the error
+        invalid_exclusive_zone will be triggered.
 
         Exclusive zone is double-buffered, see wl_surface.commit.
+
+        Until version 5 if set to -1, the surface indicates that it would not
+        like to be moved to accommodate for other surfaces, and the compositor
+        should extend it all the way to the edges it is anchored to.
+        A wallpaper or lock screen might set their exclusive zone to -1, so that
+        they stretch below or over the panel.
       </description>
       <arg name="zone" type="int"/>
     </request>
@@ -368,6 +371,7 @@
       <entry name="invalid_anchor" value="2" summary="anchor bitfield is invalid"/>
       <entry name="invalid_keyboard_interactivity" value="3" summary="keyboard interactivity is invalid"/>
       <entry name="invalid_exclusive_edge" value="4" summary="exclusive edge is invalid given the surface anchors"/>
+      <entry name="invalid_exclusive_zone" value="5" summary="exclusive zone value is invalid, since version 6 it can't be less than zero"/>
     </enum>
 
     <enum name="anchor" bitfield="true">
