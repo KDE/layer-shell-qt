@@ -176,10 +176,11 @@
         occluding the panel, but shell surfaces are shown underneath it.
 
         The default value is 0.
-        Since version 6 It must be a value of 0 or more, otherwise the error
-        invalid_exclusive_zone will be triggered.
 
         Exclusive zone is double-buffered, see wl_surface.commit.
+
+        Since version 6 It must be a value of 0 or more, otherwise the error
+        invalid_exclusive_zone will be triggered.
 
         Until version 5 if set to -1, the surface indicates that it would not
         like to be moved to accommodate for other surfaces, and the compositor
@@ -412,8 +413,14 @@
 
     <request name="set_accomodate_exclusive_zones" since="6">
       <description summary="set whether accomodate exclusive zones of other surfaces">
-        Asks for this surface to not be automatically moved and resized according
-        to exclusive zones claimed by other surfaces.
+        Asks for this surface to not be automatically moved and resized according to
+        exclusive zones claimed by other surfaces.
+
+        The accomodate parameter is treated as a boolean flag, a zero value means false,
+        a non zero value means true.
+
+        This is the default behavior, if you want a zone to not be automatically moved,
+        explicitly call this with 0 as parameter.
       </description>
       <arg name="accomodate" type="uint"/>
     </request>
