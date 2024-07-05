@@ -56,9 +56,9 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setExclusiveEdge(m_interface->exclusiveEdge());
     });
 
-    setAccomodateExclusiveZones(m_interface->accomodateExclusiveZones());
-    connect(m_interface, &Window::accomodateExclusiveZonesChanged, this, [this]() {
-        setAccomodateExclusiveZones(m_interface->accomodateExclusiveZones());
+    setAnchorRect(m_interface->anchorRect());
+    connect(m_interface, &Window::anchorRectChanged, this, [this]() {
+        setAnchorRect(m_interface->anchorRect());
     });
 
     setMargins(m_interface->margins());
@@ -156,10 +156,10 @@ void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
     }
 }
 
-void QWaylandLayerSurface::setAccomodateExclusiveZones(bool accomodate)
+void QWaylandLayerSurface::setAnchorRect(int32_t anchorRect)
 {
-    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_ACCOMODATE_EXCLUSIVE_ZONES_SINCE_VERSION) {
-        set_accomodate_exclusive_zones(accomodate);
+    if (zwlr_layer_surface_v1_get_version(object()) >= ZWLR_LAYER_SURFACE_V1_SET_ANCHOR_RECT_SINCE_VERSION) {
+        set_anchor_rect(anchorRect);
     }
 }
 

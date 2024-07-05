@@ -382,6 +382,11 @@
       <entry name="right" value="8" summary="the right edge of the anchor rectangle"/>
     </enum>
 
+    <enum name="anchor_rect">
+      <entry name="anchor_rect_work_area" value="0" summary="use the anchor rectangle which takes into account all the other exclusive zones (default)"/>
+      <entry name="anchor_rect_full_area" value="1" summary="use the whole screen area as the anchor rect, ignoring other exclusive zones"/>
+    </enum>
+
     <!-- Version 2 additions -->
 
     <request name="set_layer" since="2">
@@ -411,18 +416,19 @@
 
     <!-- Version 6 additions -->
 
-    <request name="set_accomodate_exclusive_zones" since="6">
-      <description summary="set whether accomodate exclusive zones of other surfaces">
-        Asks for this surface to not be automatically moved and resized according to
-        exclusive zones claimed by other surfaces.
+    <request name="set_anchor_rect" since="6">
+      <description summary="set which anchor rect to use to position the surface">
+        When this surface is anchored, it can be to two possible anchor rects.
 
-        The accomodate parameter is treated as a boolean flag, a zero value means false,
-        a non zero value means true.
+        The work area rect (anchor_rect_work_area) is the usable space, excluding
+        exclusive zones already claimed by other surfaces, ensuring no overlap will happen.
+        This is the default behavior
 
-        This is the default behavior, if you want a zone to not be automatically moved,
-        explicitly call this with 0 as parameter.
+        The full area (anchor_rect_full_area) is the whole space of the screen, ensuring
+        that the surface will touch all the screen edges corresponding to each anchor
+        edge that was asked, even if this would result in overlapping surfaces.
       </description>
-      <arg name="accomodate" type="uint"/>
+      <arg name="anchor_rect" type="int" enum="anchor_rect"/>
     </request>
 
   </interface>
