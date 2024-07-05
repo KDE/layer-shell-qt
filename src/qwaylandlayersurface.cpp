@@ -231,8 +231,10 @@ void QWaylandLayerSurface::sendExpose()
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
     window()->handleExpose(QRect(QPoint(), m_pendingSize));
-#else
+#elif QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
     window()->sendRecursiveExposeEvent();
+#else
+    window()->updateExposure();
 #endif
 }
 
