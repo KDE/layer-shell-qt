@@ -382,11 +382,6 @@
       <entry name="right" value="8" summary="the right edge of the anchor rectangle"/>
     </enum>
 
-    <enum name="anchor_rect">
-      <entry name="anchor_rect_work_area" value="0" summary="use the anchor rectangle which takes into account all the other exclusive zones (default)"/>
-      <entry name="anchor_rect_full_area" value="1" summary="use the whole screen area as the anchor rect, ignoring other exclusive zones"/>
-    </enum>
-
     <!-- Version 2 additions -->
 
     <request name="set_layer" since="2">
@@ -416,19 +411,29 @@
 
     <!-- Version 6 additions -->
 
+    <enum name="anchor_rect">
+      <entry name="full_area" value="0" summary="the full area anchor rect">
+        <description summary="the full area anchor rect">
+          Place the layer_surface_v1 relative to the full output area.
+        </description>
+      </entry>
+      <entry name="work_area" value="1" summary="the work area anchor rect">
+        <description summary="the work area anchor rect">
+          Place the layer_surface_v1 relative to the output area while taking
+          the exclusive zone of other surfaces into account.
+        </description>
+      </entry>
+    </enum>
+
     <request name="set_anchor_rect" since="6">
-      <description summary="set which anchor rect to use to position the surface">
-        When this surface is anchored, it can be to two possible anchor rects.
+      <description summary="set the anchor rect">
+        Set the anchor rectangle relative to which the anchors are applied.
 
-        The work area rect (anchor_rect_work_area) is the usable space, excluding
-        exclusive zones already claimed by other surfaces, ensuring no overlap will happen.
-        This is the default behavior
+        By default, the layer_surface_v1 is anchored to the 'work_area'.
 
-        The full area (anchor_rect_full_area) is the whole space of the screen, ensuring
-        that the surface will touch all the screen edges corresponding to each anchor
-        edge that was asked, even if this would result in overlapping surfaces.
+        Anchor rect is double-buffered, see wl_surface.commit.
       </description>
-      <arg name="anchor_rect" type="int" enum="anchor_rect"/>
+      <arg name="rect" type="uint" enum="anchor_rect"/>
     </request>
 
   </interface>
