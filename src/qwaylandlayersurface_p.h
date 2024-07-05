@@ -8,6 +8,7 @@
 #ifndef _LAYERSURFACE_H
 #define _LAYERSURFACE_H
 
+#include <cstdint>
 #include <wayland-client.h>
 
 #include "qwaylandlayershellintegration_p.h"
@@ -38,7 +39,7 @@ public:
     void setAnchor(uint32_t anchor);
     void setExclusiveZone(int32_t zone);
     void setExclusiveEdge(uint32_t edge);
-    void setAccomodateExclusiveZones(bool accomodate);
+    void setAnchorRect(int32_t anchorRect);
     void setMargins(const QMargins &margins);
     void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);
