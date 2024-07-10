@@ -32,6 +32,7 @@ public:
     QtWaylandClient::QWaylandShellSurface *createShellSurface(QtWaylandClient::QWaylandWindow *window) override;
 
 private:
+    bool eventFilter(QObject *watched, QEvent *event) override;
     QScopedPointer<QWaylandXdgActivationV1> m_xdgActivation;
 };
 
