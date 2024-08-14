@@ -4,10 +4,15 @@
 remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 add_library(LayerShellQtInterface)
+
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+    set(private_code_option  "PRIVATE_CODE")
+endif()
 qt6_generate_wayland_protocol_client_sources(LayerShellQtInterface FILES
     ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
     ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/wlr-layer-shell-unstable-v1.xml
+    ${private_code_option}
 )
 
 ecm_qt_declare_logging_category(LayerShellQtInterface
