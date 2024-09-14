@@ -13,12 +13,18 @@
 
 namespace LayerShellQt
 {
-/**
- * Sets the right environment so the shells created from now on use wlr-layer-shell.
+/*!
+ * \class LayerShellQt::Shell
+ * \inmodule LayerShellQt
+ * \inheaderfile LayerShellQt/Shell
+ *
  */
 class LAYERSHELLQT_EXPORT Shell
 {
 public:
+    /*!
+     * Sets the right environment so the shells created from now on use wlr-layer-shell.
+     */
     static void useLayerShell();
 };
 

@@ -1,0 +1,30 @@
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = LayerShellQt
+description = Qt component to allow applications to make use of the Wayland wl-layer-shell protocol
+
+documentationinheaders = true
+
+headerdirs = .
+
+headers.fileextensions = "*.qdoc *.h"
+
+outputdir  = doc/html
+outputformats = HTML
+
+depends += \
+    qtcore
+
+qhp.projects            = LayerShellQt
+
+qhp.LayerShellQt.file                = layershellqt.qhp
+qhp.LayerShellQt.namespace           = org.kde.layershellqt.$QT_VERSION_TAG
+qhp.LayerShellQt.virtualFolder       = layershellqt
+qhp.LayerShellQt.indexTitle          = LayerShellQt
+qhp.LayerShellQt.indexRoot           =
+
+qhp.LayerShellQt.subprojects         = classes
+qhp.LayerShellQt.subprojects.classes.title = C++ Classes
+qhp.LayerShellQt.subprojects.classes.indexTitle = LayerShellQt C++ Classes
+qhp.LayerShellQt.subprojects.classes.selectors = class fake:headerfile
+qhp.LayerShellQt.subprojects.classes.sortPages = true

@@ -68,6 +68,8 @@ generate_export_header(LayerShellQtInterface
     EXPORT_FILE_NAME LayerShellQt/layershellqt_export.h
 )
 
+ecm_generate_qdoc(LayerShellQtInterface layershellqt.qdocconf)
+
 install(TARGETS layer-shell
         LIBRARY DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/wayland-shell-integration)
 
