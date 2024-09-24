@@ -37,6 +37,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         }
     }
     init(shell->get_layer_surface(window->waylandSurface()->object(), output, m_interface->layer(), m_interface->scope()));
+    setLayer(m_interface->layer());
     connect(m_interface, &Window::layerChanged, this, [this]() {
         setLayer(m_interface->layer());
     });
