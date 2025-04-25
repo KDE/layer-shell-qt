@@ -28,10 +28,7 @@ public:
     QWaylandLayerSurface(QWaylandLayerShellIntegration *shell, QtWaylandClient::QWaylandWindow *window);
     ~QWaylandLayerSurface() override;
 
-    bool isExposed() const override
-    {
-        return m_configured;
-    }
+    bool isExposed() const override;
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
     void setDesiredSize(const QSize &size);
@@ -57,6 +54,7 @@ private:
     void sendExpose();
     void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_closed() override;
+    void zwlr_layer_surface_v1_rearranged(uint32_t token) override;
 
     QWaylandLayerShellIntegration *m_shell;
     LayerShellQt::Window *m_interface;
@@ -68,6 +66,8 @@ private:
 #if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
     bool m_configuring = false;
 #endif
+    quint32 m_arrangeSerial = 0;
+    bool m_waitingForRearrange = false;
 };
 
 }

@@ -74,10 +74,24 @@ QWaylandLayerSurface::~QWaylandLayerSurface()
     destroy();
 }
 
+bool QWaylandLayerSurface::isExposed() const
+{
+    return m_configured && !m_waitingForRearrange;
+}
+
 void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
 {
     if (m_interface->closeOnDismissed()) {
         window()->window()->close();
+    }
+}
+
+void QWaylandLayerSurface::zwlr_layer_surface_v1_rearranged(uint32_t serial)
+{
+    qDebug() << serial << m_arrangeSerial;
+    if (m_arrangeSerial == serial) {
+        qDebug() << "unset rearrange";
+        m_waitingForRearrange = false;
     }
 }
 
@@ -89,7 +103,6 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     if (!m_configured) {
         m_configured = true;
         applyConfigure();
-        sendExpose();
     } else {
         // Later configures are resizes, so we have to queue them up for a time when we
         // are not painting to the window.
@@ -117,6 +130,7 @@ void QWaylandLayerSurface::applyConfigure()
 #if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
     m_configuring = false;
 #endif
+    window()->updateExposure();
 }
 
 void QWaylandLayerSurface::setDesiredSize(const QSize &size)
@@ -132,6 +146,16 @@ void QWaylandLayerSurface::setDesiredSize(const QSize &size)
         effectiveSize.setHeight(0);
     }
     set_size(effectiveSize.width(), effectiveSize.height());
+
+    static quint32 token = 0;
+    m_waitingForRearrange = true;
+    m_arrangeSerial = ++token;
+    set_arrange_token(m_arrangeSerial);
+    window()->updateExposure();
+    if (!window()->isExposed()) {
+        window()->commit(); // FIXME: ugly
+    }
+    qDebug() << "request reposition" << m_arrangeSerial;
 }
 
 void QWaylandLayerSurface::setAnchor(uint anchor)
