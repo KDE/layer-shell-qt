@@ -32,6 +32,7 @@ public:
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityOnDemand;
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
+    QSize desiredSize = QSize(0, 0);
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
     bool closeOnDismissed = true;
 };
@@ -95,6 +96,21 @@ void Window::setMargins(const QMargins &margins)
 QMargins Window::margins() const
 {
     return d->margins;
+}
+
+void Window::setDesiredSize(const QSize &size)
+{
+    if (size == d->desiredSize) {
+        return;
+    }
+
+    d->desiredSize = size;
+    Q_EMIT desiredSizeChanged();
+}
+
+QSize Window::desiredSize() const
+{
+    return d->desiredSize;
 }
 
 void Window::setKeyboardInteractivity(KeyboardInteractivity interactivity)

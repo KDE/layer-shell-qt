@@ -86,6 +86,9 @@ public:
     void setMargins(const QMargins &margins);
     QMargins margins() const;
 
+    void setDesiredSize(const QSize &size);
+    QSize desiredSize() const;
+
     void setKeyboardInteractivity(KeyboardInteractivity interactivity);
     KeyboardInteractivity keyboardInteractivity() const;
 
@@ -127,6 +130,7 @@ Q_SIGNALS:
     void exclusionZoneChanged();
     void exclusiveEdgeChanged();
     void marginsChanged();
+    void desiredSizeChanged();
     void keyboardInteractivityChanged();
     void layerChanged();
 

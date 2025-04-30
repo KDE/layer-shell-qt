@@ -44,7 +44,11 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     setAnchor(m_interface->anchors());
     connect(m_interface, &Window::anchorsChanged, this, [this]() {
         setAnchor(m_interface->anchors());
-        setDesiredSize(m_window->windowContentGeometry().size());
+        if (m_interface->desiredSize().isNull()) {
+            setDesiredSize(m_window->windowContentGeometry().size());
+        } else {
+            setDesiredSize(m_interface->desiredSize());
+        }
     });
 
     setExclusiveZone(m_interface->exclusionZone());
@@ -61,12 +65,22 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setMargins(m_interface->margins());
     });
 
+    connect(m_interface, &Window::desiredSizeChanged, this, [this]() {
+        if (!m_interface->desiredSize().isNull()) {
+            setDesiredSize(m_interface->desiredSize());
+        }
+    });
+
     setKeyboardInteractivity(m_interface->keyboardInteractivity());
     connect(m_interface, &Window::keyboardInteractivityChanged, this, [this]() {
         setKeyboardInteractivity(m_interface->keyboardInteractivity());
     });
 
-    setDesiredSize(window->windowContentGeometry().size());
+    if (m_interface->desiredSize().isNull()) {
+        setDesiredSize(window->windowContentGeometry().size());
+    } else {
+        setDesiredSize(m_interface->desiredSize());
+    }
 }
 
 QWaylandLayerSurface::~QWaylandLayerSurface()
@@ -174,12 +188,16 @@ void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
         return;
     }
 
-    setDesiredSize(geometry.size());
+    if (m_interface->desiredSize().isNull()) {
+        setDesiredSize(geometry.size());
+    }
 }
 #else
 void QWaylandLayerSurface::setWindowSize(const QSize &size)
 {
-    setDesiredSize(size);
+    if (m_interface->desiredSize().isNull()) {
+        setDesiredSize(size);
+    }
 }
 #endif
 
