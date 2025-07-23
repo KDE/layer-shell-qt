@@ -28,6 +28,7 @@ class LAYERSHELLQT_EXPORT Window : public QObject
     Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
     Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
+    Q_PROPERTY(bool activateOnShow READ activateOnShow WRITE setActivateOnShow)
 
 public:
     ~Window() override;
@@ -116,6 +117,18 @@ public:
      */
     void setCloseOnDismissed(bool close);
     bool closeOnDismissed() const;
+
+    /**
+     * Whether the window should requestActivate on show.
+     *
+     * Normally, you want this enabled but in case of e.g. a desktop window, this can be disabled.
+     *
+     * It does nothing when KeyboardInteractivity is KeyboardInteractivityNone.
+     *
+     * The default is true.
+     */
+    void setActivateOnShow(bool activateOnShow);
+    bool activateOnShow() const;
 
     /**
      * Gets the LayerShell Window for a given Qt Window

@@ -50,6 +50,7 @@ public:
 #endif
 
     bool requestActivate() override;
+    bool requestActivateOnShow() override;
     void setXdgActivationToken(const QString &token) override;
     void requestXdgActivationToken(quint32 serial) override;
 

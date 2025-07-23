@@ -230,6 +230,23 @@ bool QWaylandLayerSurface::requestActivate()
     return false;
 }
 
+bool QWaylandLayerSurface::requestActivateOnShow()
+{
+    if (!m_interface->activateOnShow()) {
+        return false;
+    }
+
+    if (m_interface->keyboardInteractivity() == Window::KeyboardInteractivityNone) {
+        return false;
+    }
+
+    if (m_window->window()->property("_q_showWithoutActivating").toBool()) {
+        return false;
+    }
+
+    return requestActivate();
+}
+
 void QWaylandLayerSurface::setXdgActivationToken(const QString &token)
 {
     m_activationToken = token;
