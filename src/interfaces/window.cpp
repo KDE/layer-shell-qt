@@ -35,6 +35,7 @@ public:
     QSize desiredSize = QSize(0, 0);
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
     bool closeOnDismissed = true;
+    bool activateOnShow = true;
 };
 
 static QMap<QWindow *, Window *> s_map;
@@ -168,6 +169,16 @@ bool Window::closeOnDismissed() const
 void Window::setCloseOnDismissed(bool close)
 {
     d->closeOnDismissed = close;
+}
+
+bool Window::activateOnShow() const
+{
+    return d->activateOnShow;
+}
+
+void Window::setActivateOnShow(bool activateOnShow)
+{
+    d->activateOnShow = activateOnShow;
 }
 
 Window::Window(QWindow *window)
