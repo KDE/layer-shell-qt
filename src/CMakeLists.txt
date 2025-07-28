@@ -5,6 +5,8 @@ remove_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 
 add_library(LayerShellQtInterface)
 
+qt6_extract_metatypes(LayerShellQtInterface)
+
 if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
     set(private_code_option  "PRIVATE_CODE")
 endif()

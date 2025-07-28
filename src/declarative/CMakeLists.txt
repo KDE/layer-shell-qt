@@ -4,7 +4,8 @@
 ecm_add_qml_module(LayerShellQtQml
                   URI "org.kde.layershell"
                   VERSION 1.0
-                  SOURCES layershellqtplugin.cpp)
+                  SOURCES types.h types.cpp
+                  GENERATE_PLUGIN_SOURCE)
 target_link_libraries(LayerShellQtQml PRIVATE Qt::Qml LayerShellQtInterface)
 
 ecm_finalize_qml_module(LayerShellQtQml DESTINATION ${KDE_INSTALL_QMLDIR})
