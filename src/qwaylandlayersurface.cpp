@@ -211,6 +211,10 @@ bool QWaylandLayerSurface::requestActivate()
         activation->activate(m_activationToken, window()->wlSurface());
         m_activationToken = {};
         return true;
+    } else if (const auto token = qEnvironmentVariable("XDG_ACTIVATION_TOKEN"); !token.isEmpty()) {
+        activation->activate(token, window()->wlSurface());
+        qunsetenv("XDG_ACTIVATION_TOKEN");
+        return true;
     } else {
         const auto focusWindow = QGuiApplication::focusWindow();
         const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow *>(focusWindow->handle()) : window();
