@@ -40,8 +40,8 @@ public:
         AnchorLeft = 4, ///< The left edge of the anchor rectangle
         AnchorRight = 8, ///< The right edge of the anchor rectangle
     };
-    Q_ENUM(Anchor);
     Q_DECLARE_FLAGS(Anchors, Anchor)
+    Q_FLAG(Anchors)
 
     /**
      * This enum type is used to specify the layer where a surface can be put in.

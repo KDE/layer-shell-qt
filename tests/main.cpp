@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     QGuiApplication app(argc, argv);
 
     const auto layerMetaEnum = QMetaEnum::fromType<Window::Layer>();
-    const auto anchorMetaEnum = QMetaEnum::fromType<Window::Anchor>();
+    const auto anchorMetaEnum = QMetaEnum::fromType<Window::Anchors>();
 
     QCommandLineParser parser;
     QCommandLineOption marginsOption(QStringLiteral("margins"), QStringLiteral("Window margins"), QStringLiteral("pixels"), QStringLiteral("0"));
