@@ -138,6 +138,8 @@ public:
 
     static Window *qmlAttachedProperties(QObject *object);
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 Q_SIGNALS:
     void anchorsChanged();
     void exclusionZoneChanged();
