@@ -150,6 +150,8 @@ Q_SIGNALS:
     void layerChanged();
 
 private:
+    void initializeShell();
+
     Window(QWindow *window);
     QScopedPointer<WindowPrivate> d;
 };
