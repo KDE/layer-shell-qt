@@ -187,6 +187,13 @@ Window::Window(QWindow *window)
 {
     s_map.insert(d->parentWindow, this);
     window->installEventFilter(this);
+    if (window->isVisible()) {
+        qCWarning(LAYERSHELLQT) << d->parentWindow << "already has a shell integration. Call QWindow::close() first and show it again.";
+    }
+
+    if (window->handle()) {
+        initializeShell();
+    }
 }
 
 bool Window::eventFilter(QObject *watched, QEvent *event)
@@ -196,26 +203,30 @@ bool Window::eventFilter(QObject *watched, QEvent *event)
         return false;
     }
     if (event->type() == QEvent::PlatformSurface) {
-        auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
-        if (!waylandWindow) {
-            qCWarning(LAYERSHELLQT) << window << "is not a wayland window. Not creating zwlr_layer_surface";
-            return false;
-        }
-
-        static QWaylandLayerShellIntegration *shellIntegration = nullptr;
-        if (!shellIntegration) {
-            shellIntegration = new QWaylandLayerShellIntegration();
-            if (!shellIntegration->initialize(waylandWindow->display())) {
-                delete shellIntegration;
-                shellIntegration = nullptr;
-                qCWarning(LAYERSHELLQT)
-                    << "Failed to initialize layer-shell integration, possibly because compositor does not support the layer-shell protocol";
-                return false;
-            }
-        }
-        waylandWindow->setShellIntegration(shellIntegration);
+        initializeShell();
     }
     return false;
+}
+
+void Window::initializeShell()
+{
+    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(d->parentWindow->handle());
+    if (!waylandWindow) {
+        qCWarning(LAYERSHELLQT) << d->parentWindow << "is not a wayland window. Not creating zwlr_layer_surface";
+        return;
+    }
+
+    static QWaylandLayerShellIntegration *shellIntegration = nullptr;
+    if (!shellIntegration) {
+        shellIntegration = new QWaylandLayerShellIntegration();
+        if (!shellIntegration->initialize(waylandWindow->display())) {
+            delete shellIntegration;
+            shellIntegration = nullptr;
+            qCWarning(LAYERSHELLQT) << "Failed to initialize layer-shell integration, possibly because compositor does not support the layer-shell protocol";
+            return;
+        }
+    }
+    waylandWindow->setShellIntegration(shellIntegration);
 }
 
 Window *Window::get(QWindow *window)
