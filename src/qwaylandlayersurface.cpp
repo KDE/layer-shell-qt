@@ -124,13 +124,7 @@ void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *po
 
 void QWaylandLayerSurface::applyConfigure()
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-    m_configuring = true;
-#endif
     window()->resizeFromApplyConfigure(m_pendingSize);
-#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-    m_configuring = false;
-#endif
 }
 
 void QWaylandLayerSurface::setDesiredSize(const QSize &size)
@@ -181,25 +175,12 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
         set_layer(layer);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-void QWaylandLayerSurface::setWindowGeometry(const QRect &geometry)
-{
-    if (m_configuring) {
-        return;
-    }
-
-    if (m_interface->desiredSize().isNull()) {
-        setDesiredSize(geometry.size());
-    }
-}
-#else
 void QWaylandLayerSurface::setWindowSize(const QSize &size)
 {
     if (m_interface->desiredSize().isNull()) {
         setDesiredSize(size);
     }
 }
-#endif
 
 bool QWaylandLayerSurface::requestActivate()
 {
@@ -268,13 +249,6 @@ void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
 
 void QWaylandLayerSurface::sendExpose()
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
-    window()->handleExpose(QRect(QPoint(), m_pendingSize));
-#elif QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-    window()->sendRecursiveExposeEvent();
-#else
     window()->updateExposure();
-#endif
 }
-
 }

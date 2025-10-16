@@ -43,11 +43,7 @@ public:
     void setLayer(uint32_t layer);
 
     void applyConfigure() override;
-#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-    void setWindowGeometry(const QRect &geometry) override;
-#else
     void setWindowSize(const QSize &size) override;
-#endif
 
     bool requestActivate() override;
     bool requestActivateOnShow() override;
@@ -66,9 +62,6 @@ private:
     QString m_activationToken;
 
     bool m_configured = false;
-#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
-    bool m_configuring = false;
-#endif
 };
 
 }
