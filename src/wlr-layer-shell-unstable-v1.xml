@@ -25,7 +25,7 @@
     THIS SOFTWARE.
   </copyright>
 
-  <interface name="zwlr_layer_shell_v1" version="5">
+  <interface name="zwlr_layer_shell_v1" version="6">
     <description summary="create surfaces that are layers of the desktop">
       Clients can use this interface to assign the surface_layer role to
       wl_surfaces. Such surfaces are assigned to a "layer" of the output and
@@ -100,7 +100,7 @@
     </request>
   </interface>
 
-  <interface name="zwlr_layer_surface_v1" version="5">
+  <interface name="zwlr_layer_surface_v1" version="6">
     <description summary="layer metadata interface">
       An interface that may be implemented by a wl_surface, for surfaces that
       are designed to be rendered as a layer of a stacked desktop-like
@@ -402,6 +402,84 @@
         invalid_exclusive_edge protocol error will be raised.
       </description>
       <arg name="edge" type="uint"/>
+    </request>
+
+    <!-- Version 6 additions -->
+
+    <request name="set_left_margin_absolute" since="6">
+      <description summary="set left margin in absolute pixels">
+        Sets the left margin in absolute pixels.
+
+        The left margin specified in percents will be overwritten.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_left_margin_percents" since="6">
+      <description summary="set the left margin proportional to area width">
+        Sets the left margin as a percentage of the area width. The
+        margin value is a number between 0 and 1.
+
+        The left margin specified in absolute values will be overwritten.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_top_margin_absolute" since="6">
+      <description summary="set top margin in absolute pixels">
+        Sets the top margin in absolute pixels.
+
+        The top margin specified in percents will be overwritten.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_top_margin_percents" since="6">
+      <description summary="set the top margin proportional to area width">
+        Sets the top margin as a percentage of the area width. The
+        margin value is a number between 0 and 1.
+
+        The top margin specified in absolute values will be overwritten.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_right_margin_absolute" since="6">
+      <description summary="set right margin in absolute pixels">
+        Sets the right margin in absolute pixels.
+
+        The right margin specified in percents will be overwritten.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_right_margin_percents" since="6">
+      <description summary="set the right margin proportional to area width">
+        Sets the right margin as a percentage of the area width. The
+        margin value is a number between 0 and 1.
+
+        The right margin specified in absolute values will be overwritten.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_bottom_margin_absolute" since="6">
+      <description summary="set bottom margin in absolute pixels">
+        Sets the bottom margin in absolute pixels.
+
+        The bottom margin specified in percents will be overwritten.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_bottom_margin_percents" since="6">
+      <description summary="set the bottom margin proportional to area width">
+        Sets the bottom margin as a percentage of the area width. The
+        margin value is a number between 0 and 1.
+
+        The bottom margin specified in absolute values will be overwritten.
+      </description>
+      <arg name="margin" type="fixed"/>
     </request>
   </interface>
 </protocol>
