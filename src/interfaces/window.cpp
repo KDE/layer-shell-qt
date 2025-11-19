@@ -17,6 +17,49 @@
 
 using namespace LayerShellQt;
 
+Margin::Margin()
+    : m_value(0)
+{
+}
+
+Margin::Margin(int pixels)
+    : m_value(pixels)
+{
+}
+
+Margin::Margin(qreal fraction)
+    : m_value(fraction)
+{
+}
+
+Margin Margin::fromPixels(int pixels)
+{
+    return Margin(pixels);
+}
+
+Margin Margin::fromFraction(qreal fraction)
+{
+    return Margin(fraction);
+}
+
+std::optional<int> Margin::pixels() const
+{
+    if (std::holds_alternative<int>(m_value)) {
+        return std::get<int>(m_value);
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<qreal> Margin::fraction() const
+{
+    if (std::holds_alternative<qreal>(m_value)) {
+        return std::get<qreal>(m_value);
+    } else {
+        return std::nullopt;
+    }
+}
+
 class LayerShellQt::WindowPrivate
 {
 public:
@@ -32,7 +75,10 @@ public:
     Window::Anchor exclusiveEdge = Window::AnchorNone;
     Window::KeyboardInteractivity keyboardInteractivity = Window::KeyboardInteractivityOnDemand;
     Window::Layer layer = Window::LayerTop;
-    QMargins margins;
+    Margin leftMargin;
+    Margin topMargin;
+    Margin rightMargin;
+    Margin bottomMargin;
     QSize desiredSize = QSize(0, 0);
     Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
     bool closeOnDismissed = true;
@@ -89,15 +135,74 @@ Window::Anchor Window::exclusiveEdge() const
 
 void Window::setMargins(const QMargins &margins)
 {
-    if (d->margins != margins) {
-        d->margins = margins;
-        Q_EMIT marginsChanged();
-    }
+    setLeftMargin(Margin::fromPixels(margins.left()));
+    setTopMargin(Margin::fromPixels(margins.top()));
+    setRightMargin(Margin::fromPixels(margins.right()));
+    setBottomMargin(Margin::fromPixels(margins.bottom()));
 }
 
 QMargins Window::margins() const
 {
-    return d->margins;
+    return QMargins(d->leftMargin.pixels().value_or(0),
+                    d->topMargin.pixels().value_or(0),
+                    d->rightMargin.pixels().value_or(0),
+                    d->bottomMargin.pixels().value_or(0));
+}
+
+void Window::setLeftMargin(Margin margin)
+{
+    if (d->leftMargin != margin) {
+        d->leftMargin = margin;
+        Q_EMIT leftMarginChanged();
+        Q_EMIT marginsChanged();
+    }
+}
+
+Margin Window::leftMargin() const
+{
+    return d->leftMargin;
+}
+
+void Window::setTopMargin(Margin margin)
+{
+    if (d->topMargin != margin) {
+        d->topMargin = margin;
+        Q_EMIT topMarginChanged();
+        Q_EMIT marginsChanged();
+    }
+}
+
+Margin Window::topMargin() const
+{
+    return d->topMargin;
+}
+
+void Window::setRightMargin(Margin margin)
+{
+    if (d->rightMargin != margin) {
+        d->rightMargin = margin;
+        Q_EMIT rightMarginChanged();
+        Q_EMIT marginsChanged();
+    }
+}
+
+Margin Window::rightMargin() const
+{
+    return d->rightMargin;
+}
+
+void Window::setBottomMargin(Margin margin)
+{
+    if (d->bottomMargin != margin) {
+        d->bottomMargin = margin;
+        Q_EMIT bottomMarginChanged();
+        Q_EMIT marginsChanged();
+    }
+}
+
+Margin Window::bottomMargin() const
+{
+    return d->bottomMargin;
 }
 
 void Window::setDesiredSize(const QSize &size)

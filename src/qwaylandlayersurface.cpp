@@ -60,9 +60,24 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
         setExclusiveEdge(m_interface->exclusiveEdge());
     });
 
-    setMargins(m_interface->margins());
-    connect(m_interface, &Window::marginsChanged, this, [this]() {
-        setMargins(m_interface->margins());
+    setLeftMargin(m_interface->leftMargin());
+    connect(m_interface, &Window::leftMarginChanged, this, [this]() {
+        setLeftMargin(m_interface->leftMargin());
+    });
+
+    setTopMargin(m_interface->topMargin());
+    connect(m_interface, &Window::topMarginChanged, this, [this]() {
+        setTopMargin(m_interface->topMargin());
+    });
+
+    setRightMargin(m_interface->rightMargin());
+    connect(m_interface, &Window::rightMarginChanged, this, [this]() {
+        setRightMargin(m_interface->rightMargin());
+    });
+
+    setBottomMargin(m_interface->bottomMargin());
+    connect(m_interface, &Window::bottomMarginChanged, this, [this]() {
+        setBottomMargin(m_interface->bottomMargin());
     });
 
     connect(m_interface, &Window::desiredSizeChanged, this, [this]() {
@@ -159,9 +174,68 @@ void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
     }
 }
 
-void QWaylandLayerSurface::setMargins(const QMargins &margins)
+void QWaylandLayerSurface::setLeftMargin(const Margin &margin)
 {
-    set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+    if (zwlr_layer_surface_v1_get_version(object()) >= 6) {
+        if (const auto pixels = margin.pixels()) {
+            set_left_margin_units(*pixels);
+        } else if (const auto fraction = margin.fraction()) {
+            set_left_margin_fraction(wl_fixed_from_double(*fraction));
+        } else {
+            qCWarning(LAYERSHELLQT) << "Unspecified left margin for" << m_window->window();
+        }
+    } else {
+        const QMargins margins = m_interface->margins();
+        set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+    }
+}
+
+void QWaylandLayerSurface::setTopMargin(const Margin &margin)
+{
+    if (zwlr_layer_surface_v1_get_version(object()) >= 6) {
+        if (const auto pixels = margin.pixels()) {
+            set_top_margin_units(*pixels);
+        } else if (const auto fraction = margin.fraction()) {
+            set_top_margin_fraction(wl_fixed_from_double(*fraction));
+        } else {
+            qCWarning(LAYERSHELLQT) << "Unspecified top margin for" << m_window->window();
+        }
+    } else {
+        const QMargins margins = m_interface->margins();
+        set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+    }
+}
+
+void QWaylandLayerSurface::setRightMargin(const Margin &margin)
+{
+    if (zwlr_layer_surface_v1_get_version(object()) >= 6) {
+        if (const auto pixels = margin.pixels()) {
+            set_right_margin_units(*pixels);
+        } else if (const auto fraction = margin.fraction()) {
+            set_right_margin_fraction(wl_fixed_from_double(*fraction));
+        } else {
+            qCWarning(LAYERSHELLQT) << "Unspecified right margin for" << m_window->window();
+        }
+    } else {
+        const QMargins margins = m_interface->margins();
+        set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+    }
+}
+
+void QWaylandLayerSurface::setBottomMargin(const Margin &margin)
+{
+    if (zwlr_layer_surface_v1_get_version(object()) >= 6) {
+        if (const auto pixels = margin.pixels()) {
+            set_bottom_margin_units(*pixels);
+        } else if (const auto fraction = margin.fraction()) {
+            set_bottom_margin_fraction(wl_fixed_from_double(*fraction));
+        } else {
+            qCWarning(LAYERSHELLQT) << "Unspecified bottom margin for" << m_window->window();
+        }
+    } else {
+        const QMargins margins = m_interface->margins();
+        set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+    }
 }
 
 void QWaylandLayerSurface::setKeyboardInteractivity(uint32_t interactivity)

@@ -19,6 +19,7 @@
 namespace LayerShellQt
 {
 
+class Margin;
 class Window;
 
 class LAYERSHELLQT_EXPORT QWaylandLayerSurface : public QtWaylandClient::QWaylandShellSurface, public QtWayland::zwlr_layer_surface_v1
@@ -38,7 +39,10 @@ public:
     void setAnchor(uint32_t anchor);
     void setExclusiveZone(int32_t zone);
     void setExclusiveEdge(uint32_t edge);
-    void setMargins(const QMargins &margins);
+    void setLeftMargin(const Margin &margin);
+    void setTopMargin(const Margin &margin);
+    void setRightMargin(const Margin &margin);
+    void setBottomMargin(const Margin &margin);
     void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);
 

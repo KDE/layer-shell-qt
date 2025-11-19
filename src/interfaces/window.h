@@ -18,6 +18,34 @@ namespace LayerShellQt
 {
 class WindowPrivate;
 
+/**
+ * The Margin type provides a way to specify how far a layer surface should be away from a screen edge.
+ *
+ * A margin can have an absolute value or a percent value. An absolute value indicates the distance
+ * in pixels. A percent value indicates the distance as a percentage of the output size, for example
+ * this can be used to tell the compositor that the surface should be one third of the output height from
+ * a screen edge, etc.
+ */
+class LAYERSHELLQT_EXPORT Margin
+{
+public:
+    static Margin fromPixels(int pixels);
+    static Margin fromFraction(qreal fraction);
+
+    Margin();
+
+    std::optional<int> pixels() const;
+    std::optional<qreal> fraction() const;
+
+    auto operator<=>(const Margin &other) const = default;
+
+private:
+    Margin(int pixels);
+    Margin(qreal fraction);
+
+    std::variant<int, qreal> m_value;
+};
+
 class LAYERSHELLQT_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -87,6 +115,18 @@ public:
     void setMargins(const QMargins &margins);
     QMargins margins() const;
 
+    void setLeftMargin(Margin margin);
+    Margin leftMargin() const;
+
+    void setTopMargin(Margin margin);
+    Margin topMargin() const;
+
+    void setRightMargin(Margin margin);
+    Margin rightMargin() const;
+
+    void setBottomMargin(Margin margin);
+    Margin bottomMargin() const;
+
     void setDesiredSize(const QSize &size);
     QSize desiredSize() const;
 
@@ -145,6 +185,10 @@ Q_SIGNALS:
     void exclusionZoneChanged();
     void exclusiveEdgeChanged();
     void marginsChanged();
+    void leftMarginChanged();
+    void topMarginChanged();
+    void rightMarginChanged();
+    void bottomMarginChanged();
     void desiredSizeChanged();
     void keyboardInteractivityChanged();
     void layerChanged();

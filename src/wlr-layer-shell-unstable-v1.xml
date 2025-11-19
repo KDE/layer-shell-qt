@@ -25,7 +25,7 @@
     THIS SOFTWARE.
   </copyright>
 
-  <interface name="zwlr_layer_shell_v1" version="5">
+  <interface name="zwlr_layer_shell_v1" version="6">
     <description summary="create surfaces that are layers of the desktop">
       Clients can use this interface to assign the surface_layer role to
       wl_surfaces. Such surfaces are assigned to a "layer" of the output and
@@ -100,7 +100,7 @@
     </request>
   </interface>
 
-  <interface name="zwlr_layer_surface_v1" version="5">
+  <interface name="zwlr_layer_surface_v1" version="6">
     <description summary="layer metadata interface">
       An interface that may be implemented by a wl_surface, for surfaces that
       are designed to be rendered as a layer of a stacked desktop-like
@@ -187,7 +187,7 @@
       <arg name="zone" type="int"/>
     </request>
 
-    <request name="set_margin">
+    <request name="set_margin" deprecated-since="6">
       <description summary="sets a margin from the anchor point">
         Requests that the surface be placed some distance away from the anchor
         point on the output, in surface-local coordinates. Setting this value
@@ -196,6 +196,10 @@
         The exclusive zone includes the margin.
 
         Margin is double-buffered, see wl_surface.commit.
+
+        This request is deprecated since version 6. Use set_left_margin_{units,fraction},
+        set_top_margin_{units,fraction}, set_right_margin_{units,fraction}, and
+        set_bottom_margin_{units,fraction} requests instead.
       </description>
       <arg name="top" type="int"/>
       <arg name="right" type="int"/>
@@ -401,7 +405,141 @@
         The edge must be one the surface is anchored to, otherwise the
         invalid_exclusive_edge protocol error will be raised.
       </description>
-      <arg name="edge" type="uint"/>
+      <arg name="edge" type="uint" enum="anchor"/>
+    </request>
+
+    <!-- Version 6 additions -->
+
+    <request name="set_left_margin_units" since="6">
+      <description summary="set the left margin in surface local coordinates">
+        Sets the left margin in surface-local coordinates.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The left margin specified using set_left_margin_fraction will be
+        overwritten by this request.
+
+        Margins are double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_left_margin_fraction" since="6">
+      <description summary="set the left margin as a fraction">
+        Sets the left margin as a fraction of the available area width. The
+        margin value is a number between 0 and 1.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The left margin specified using set_left_margin_units will be
+        overwritten by this request.
+
+        Margin is double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_top_margin_units" since="6">
+      <description summary="set the top margin in surface local coordinates">
+        Sets the top margin in surface-local coordinates.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The top margin specified using set_top_margin_fraction will be
+        overwritten by this request.
+
+        Margins are double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_top_margin_fraction" since="6">
+      <description summary="set the top margin as a fraction">
+        Sets the top margin as a fraction of the available area height. The
+        margin value is a number between 0 and 1.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The top margin specified using set_top_margin_units will be
+        overwritten by this request.
+
+        Margin is double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_right_margin_units" since="6">
+      <description summary="set the right margin in surface local coordinates">
+        Sets the right margin in surface-local coordinates.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The right margin specified using set_right_margin_fraction will be
+        overwritten by this request.
+
+        Margins are double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_right_margin_fraction" since="6">
+      <description summary="set the right margin as a fraction">
+        Sets the right margin as a fraction of the available area width. The
+        margin value is a number between 0 and 1.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The right margin specified using set_right_margin_units will be
+        overwritten by this request.
+
+        Margin is double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="fixed"/>
+    </request>
+
+    <request name="set_bottom_margin_units" since="6">
+      <description summary="set the bottom margin in surface local coordinates">
+        Sets the bottom margin in surface-local coordinates.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The bottom margin specified using set_bottom_margin_fraction will be
+        overwritten by this request.
+
+        Margins are double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="int"/>
+    </request>
+
+    <request name="set_bottom_margin_fraction" since="6">
+      <description summary="set the bottom margin as a fraction">
+        Sets the bottom margin as a fraction of the available area height. The
+        margin value is a number between 0 and 1.
+
+        Margins specify that the surface should be placed some distance away
+        from the anchor point on the output. Setting a margin for an edge
+        you are not anchored to has no effect.
+
+        The bottom margin specified using set_bottom_margin_units will be
+        overwritten by this request.
+
+        Margin is double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="margin" type="fixed"/>
     </request>
   </interface>
 </protocol>
