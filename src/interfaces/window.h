@@ -27,8 +27,9 @@ class LAYERSHELLQT_EXPORT Window : public QObject
     Q_PROPERTY(qint32 exclusionZone READ exclusionZone WRITE setExclusiveZone NOTIFY exclusionZoneChanged)
     Q_PROPERTY(Layer layer READ layer WRITE setLayer NOTIFY layerChanged)
     Q_PROPERTY(KeyboardInteractivity keyboardInteractivity READ keyboardInteractivity WRITE setKeyboardInteractivity NOTIFY keyboardInteractivityChanged)
-    Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
     Q_PROPERTY(bool activateOnShow READ activateOnShow WRITE setActivateOnShow)
+    Q_PROPERTY(bool wantsToBeOnActiveScreen READ wantsToBeOnActiveScreen WRITE setWantsToBeOnActiveScreen NOTIFY wantsToBeOnActiveScreenChanged)
+    Q_PROPERTY(QScreen *screen READ screen WRITE setScreen NOTIFY screenChanged)
 
 public:
     ~Window() override;
@@ -64,17 +65,6 @@ public:
     };
     Q_ENUM(KeyboardInteractivity)
 
-    /**
-     * This enum type is used to specify which screen to place the surface on.
-     * ScreenFromQWindow (the default) reads QWindow::screen() while ScreenFromCompositor
-     * passes nil and lets the compositor decide.
-     */
-    enum ScreenConfiguration {
-        ScreenFromQWindow = 0,
-        ScreenFromCompositor = 1,
-    };
-    Q_ENUM(ScreenConfiguration)
-
     void setAnchors(Anchors anchor);
     Anchors anchors() const;
 
@@ -96,8 +86,29 @@ public:
     void setLayer(Layer layer);
     Layer layer() const;
 
-    void setScreenConfiguration(ScreenConfiguration screenConfiguration);
-    ScreenConfiguration screenConfiguration() const;
+    /**
+     * Indicates whether the layer shell surface should be placed on the active screen based on @a set.
+     *
+     * The active screen depends on the compositor policies.
+     *
+     * If the screen() is @c null and the wantsToBeOnActiveScreen() is @c false, then the
+     * QWindow::screen() will be used to decide what screen the layer shell surface should be placed on.
+     *
+     * The screen() will be reset if @a set is @c true.
+     */
+    void setWantsToBeOnActiveScreen(bool set);
+    bool wantsToBeOnActiveScreen() const;
+
+    /**
+     * Indicates that the layer shell surface should be placed on the specified @a screen.
+     *
+     * If the screen() is @c null and the wantsToBeOnActiveScreen() is @c false, then the
+     * QWindow::screen() will be used to decide what screen the layer shell surface should be placed on.
+     *
+     * The wantsToBeOnActiveScreen() will be reset to @c false after calling this function.
+     */
+    void setScreen(QScreen *screen);
+    QScreen *screen() const;
 
     /**
      * Sets a string based identifier for this window.
@@ -148,6 +159,8 @@ Q_SIGNALS:
     void desiredSizeChanged();
     void keyboardInteractivityChanged();
     void layerChanged();
+    void wantsToBeOnActiveScreenChanged();
+    void screenChanged();
 
 private:
     void initializeShell();

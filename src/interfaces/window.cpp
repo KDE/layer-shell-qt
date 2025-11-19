@@ -34,7 +34,8 @@ public:
     Window::Layer layer = Window::LayerTop;
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
-    Window::ScreenConfiguration screenConfiguration = Window::ScreenFromQWindow;
+    QPointer<QScreen> screen;
+    bool wantsToBeOnActiveScreen = false;
     bool closeOnDismissed = true;
     bool activateOnShow = true;
 };
@@ -152,14 +153,46 @@ Window::Layer Window::layer() const
     return d->layer;
 }
 
-Window::ScreenConfiguration Window::screenConfiguration() const
+void Window::setWantsToBeOnActiveScreen(bool set)
 {
-    return d->screenConfiguration;
+    if (d->wantsToBeOnActiveScreen == set) {
+        return;
+    }
+
+    d->wantsToBeOnActiveScreen = set;
+
+    if (d->wantsToBeOnActiveScreen && d->screen) {
+        d->screen = nullptr;
+        Q_EMIT screenChanged();
+    }
+
+    Q_EMIT wantsToBeOnActiveScreenChanged();
 }
 
-void Window::setScreenConfiguration(Window::ScreenConfiguration screenConfiguration)
+bool Window::wantsToBeOnActiveScreen() const
 {
-    d->screenConfiguration = screenConfiguration;
+    return d->wantsToBeOnActiveScreen;
+}
+
+void Window::setScreen(QScreen *screen)
+{
+    if (d->screen == screen) {
+        return;
+    }
+
+    d->screen = screen;
+
+    if (d->screen && d->wantsToBeOnActiveScreen) {
+        d->wantsToBeOnActiveScreen = false;
+        Q_EMIT wantsToBeOnActiveScreenChanged();
+    }
+
+    Q_EMIT screenChanged();
+}
+
+QScreen *Window::screen() const
+{
+    return d->screen;
 }
 
 bool Window::closeOnDismissed() const
