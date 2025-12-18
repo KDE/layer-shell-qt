@@ -8,7 +8,9 @@
 #define LAYERSHELLQTSHELL_H
 
 #include "layershellqt_export.h"
-#include "window.h"
+
+#if LAYERSHELLQTINTERFACE_ENABLE_DEPRECATED_SINCE(6, 6)
+
 #include <QString>
 
 namespace LayerShellQt
@@ -19,9 +21,11 @@ namespace LayerShellQt
 class LAYERSHELLQT_EXPORT Shell
 {
 public:
+    LAYERSHELLQTINTERFACE_DEPRECATED_VERSION(6, 6, "Calling useLayerShell is not needed since Qt 6.5")
     static void useLayerShell();
 };
 
 }
+#endif
 
 #endif

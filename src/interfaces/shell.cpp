@@ -5,6 +5,9 @@
  */
 
 #include "shell.h"
+
+#if LAYERSHELLQTINTERFACE_BUILD_DEPRECATED_SINCE(6, 6)
+
 #include <QByteArray>
 #include <layershellqt_logging.h>
 #include <qglobal.h>
@@ -18,3 +21,4 @@ void Shell::useLayerShell()
         qCDebug(LAYERSHELLQT) << "Unable to set QT_WAYLAND_SHELL_INTEGRATION=layer-shell";
     }
 }
+#endif

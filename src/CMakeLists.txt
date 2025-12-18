@@ -64,10 +64,12 @@ ecm_generate_headers(LayerShellQt_HEADERS
 )
 
 
-generate_export_header(LayerShellQtInterface
+ecm_generate_export_header(LayerShellQtInterface
     BASE_NAME LayerShellQtInterface
     EXPORT_MACRO_NAME LAYERSHELLQT_EXPORT
     EXPORT_FILE_NAME LayerShellQt/layershellqt_export.h
+    VERSION ${LAYERSHELLQT_VERSION}
+    DEPRECATION_VERSIONS 6.6
 )
 
 install(TARGETS layer-shell

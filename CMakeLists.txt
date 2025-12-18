@@ -32,6 +32,7 @@ include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 include(ECMQmlModule)
 include(KDEGitCommitHooks)
+include(ECMGenerateExportHeader)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient Qml)
 
