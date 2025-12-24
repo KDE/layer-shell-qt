@@ -10,6 +10,7 @@
 #include "qwaylandlayersurface_p.h"
 #include "qwaylandxdgactivationv1_p.h"
 
+#include <QtWaylandClient/private/qwaylandinputdevice_p.h>
 #include <QtWaylandClient/private/qwaylandscreen_p.h>
 #include <QtWaylandClient/private/qwaylandsurface_p.h>
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
@@ -200,7 +201,7 @@ bool QWaylandLayerSurface::requestActivate()
         const auto focusWindow = QGuiApplication::focusWindow();
         const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow *>(focusWindow->handle()) : window();
         if (const auto seat = wlWindow->display()->lastInputDevice()) {
-            const auto tokenProvider = activation->requestXdgActivationToken(wlWindow->display(), wlWindow->wlSurface(), 0, QString());
+            const auto tokenProvider = activation->requestXdgActivationToken(wlWindow->display(), wlWindow->wlSurface(), seat->serial(), QString());
             connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this, [this](const QString &token) {
                 m_shell->activation()->activate(token, window()->wlSurface());
             });
