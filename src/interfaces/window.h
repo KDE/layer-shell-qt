@@ -30,6 +30,9 @@ class LAYERSHELLQT_EXPORT Window : public QObject
     Q_PROPERTY(bool activateOnShow READ activateOnShow WRITE setActivateOnShow)
     Q_PROPERTY(bool wantsToBeOnActiveScreen READ wantsToBeOnActiveScreen WRITE setWantsToBeOnActiveScreen NOTIFY wantsToBeOnActiveScreenChanged)
     Q_PROPERTY(QScreen *screen READ screen WRITE setScreen NOTIFY screenChanged)
+#if LAYERSHELLQTINTERFACE_ENABLE_DEPRECATED_SINCE(6, 6)
+    Q_PROPERTY(ScreenConfiguration screenConfiguration READ screenConfiguration WRITE setScreenConfiguration)
+#endif
 
 public:
     ~Window() override;
@@ -85,6 +88,25 @@ public:
 
     void setLayer(Layer layer);
     Layer layer() const;
+
+#if LAYERSHELLQTINTERFACE_ENABLE_DEPRECATED_SINCE(6, 6)
+    /**
+     * This enum type is used to specify which screen to place the surface on.
+     * ScreenFromQWindow (the default) reads QWindow::screen() while ScreenFromCompositor
+     * passes nil and lets the compositor decide.
+     */
+    LAYERSHELLQTINTERFACE_DEPRECATED_VERSION(6, 6, "Use wantsToBeOnActiveScreen and screen instead")
+    enum ScreenConfiguration {
+        ScreenFromQWindow = 0,
+        ScreenFromCompositor = 1,
+    };
+    Q_ENUM(ScreenConfiguration)
+
+    LAYERSHELLQTINTERFACE_DEPRECATED_VERSION(6, 6, "Use wantsToBeOnActiveScreen and screen instead")
+    void setScreenConfiguration(ScreenConfiguration screenConfiguration);
+    LAYERSHELLQTINTERFACE_DEPRECATED_VERSION(6, 6, "Use wantsToBeOnActiveScreen and screen instead")
+    ScreenConfiguration screenConfiguration() const;
+#endif
 
     /**
      * Indicates whether the layer shell surface should be placed on the active screen based on @a set.
