@@ -11,6 +11,7 @@
 
 #include <QPlatformSurfaceEvent>
 #include <QPointer>
+#include <mutex>
 #include <optional>
 
 #include <QtWaylandClient/private/qwaylandwindow_p.h>
@@ -152,6 +153,33 @@ Window::Layer Window::layer() const
 {
     return d->layer;
 }
+
+#if LAYERSHELLQTINTERFACE_BUILD_DEPRECATED_SINCE(6, 6)
+Window::ScreenConfiguration Window::screenConfiguration() const
+{
+    if (wantsToBeOnActiveScreen()) {
+        return ScreenFromCompositor;
+    } else {
+        // If an explicit screen is set, it's quite inaccurate but it should be fine.
+        return ScreenFromQWindow;
+    }
+}
+
+void Window::setScreenConfiguration(ScreenConfiguration screenConfiguration)
+{
+    static std::once_flag deprecationFlag;
+    std::call_once(deprecationFlag, []() {
+        qWarning() << "LayerShellQt.Window.screenConfiguration is deprecated use screen and wantsToBeOnActiveScreen instead";
+    });
+
+    if (screenConfiguration == ScreenFromCompositor) {
+        setWantsToBeOnActiveScreen(true);
+    } else {
+        setWantsToBeOnActiveScreen(false);
+        setScreen(nullptr);
+    }
+}
+#endif
 
 void Window::setWantsToBeOnActiveScreen(bool set)
 {
