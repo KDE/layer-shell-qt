@@ -42,7 +42,7 @@ public:
     ~QWaylandXdgActivationV1() override;
 
     QWaylandXdgActivationTokenV1 *
-    requestXdgActivationToken(QtWaylandClient::QWaylandDisplay *display, struct ::wl_surface *surface, std::optional<uint32_t> serial, const QString &app_id);
+    requestXdgActivationToken(::wl_seat *seat, struct ::wl_surface *surface, std::optional<uint32_t> serial, const QString &app_id);
 };
 
 #endif // QWAYLANDXDGACTIVATIONV1_P_H

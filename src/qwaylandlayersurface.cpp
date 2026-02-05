@@ -10,12 +10,10 @@
 #include "qwaylandlayersurface_p.h"
 #include "qwaylandxdgactivationv1_p.h"
 
-#include <QtWaylandClient/private/qwaylandinputdevice_p.h>
-#include <QtWaylandClient/private/qwaylandscreen_p.h>
-#include <QtWaylandClient/private/qwaylandsurface_p.h>
-#include <QtWaylandClient/private/qwaylandwindow_p.h>
-
 #include <QGuiApplication>
+#include <QScreen>
+#include <qpa/qplatformwindow.h>
+#include <qpa/qplatformwindow_p.h> // private native interface
 
 namespace LayerShellQt
 {
@@ -23,17 +21,19 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     : QtWaylandClient::QWaylandShellSurface(window)
     , QtWayland::zwlr_layer_surface_v1()
     , m_shell(shell)
-    , m_interface(Window::get(window->window()))
+    // FIXME reverse lookup would a QWindow getter make sense, also below a bunch
+    // QWindow * QWaylandShellSurface::window
+    , m_interface(Window::get(platformWindow()->window()))
     , m_window(window)
 {
     wl_output *output = nullptr;
     if (!m_interface->wantsToBeOnActiveScreen()) {
         QScreen *desiredScreen = m_interface->screen();
         if (!desiredScreen) {
-            desiredScreen = window->window()->screen();
+            desiredScreen = platformWindow()->window()->screen();
         }
 
-        auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(desiredScreen->handle());
+        auto waylandScreen = platformWindow()->window()->screen()->nativeInterface<QNativeInterface::QWaylandScreen>();
         // Qt will always assign a screen to a window, but if the compositor has no screens available a dummy QScreen object is created
         // this will not cast to a QWaylandScreen
         if (!waylandScreen) {
@@ -42,7 +42,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
             output = waylandScreen->output();
         }
     }
-    init(shell->get_layer_surface(window->waylandSurface()->object(), output, m_interface->layer(), m_interface->scope()));
+    init(shell->get_layer_surface(wlSurface(), output, m_interface->layer(), m_interface->scope()));
     connect(m_interface, &Window::layerChanged, this, [this]() {
         setLayer(m_interface->layer());
     });
@@ -51,7 +51,7 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     connect(m_interface, &Window::anchorsChanged, this, [this]() {
         setAnchor(m_interface->anchors());
         if (m_interface->desiredSize().isNull()) {
-            setDesiredSize(m_window->windowContentGeometry().size());
+            setDesiredSize(m_lastContentGeometry.size());
         } else {
             setDesiredSize(m_interface->desiredSize());
         }
@@ -83,9 +83,19 @@ QWaylandLayerSurface::QWaylandLayerSurface(QWaylandLayerShellIntegration *shell,
     });
 
     if (m_interface->desiredSize().isNull()) {
-        setDesiredSize(window->windowContentGeometry().size());
+        // FIXME QWaylandWindow should call setWindowContentGeometry when creating the shell surface
+        // / Does a setWindowContentGeometry call arrive early enough?
+        // setDesiredSize(window->windowContentGeometry().size());
     } else {
         setDesiredSize(m_interface->desiredSize());
+    }
+}
+
+void QWaylandLayerSurface::setContentGeometry(const QRect &rect)
+{
+    m_lastContentGeometry = rect;
+    if (m_interface->desiredSize().isNull()) {
+        setDesiredSize(rect.size());
     }
 }
 
@@ -97,7 +107,7 @@ QWaylandLayerSurface::~QWaylandLayerSurface()
 void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
 {
     if (m_interface->closeOnDismissed()) {
-        window()->window()->close();
+        platformWindow()->close();
     }
 }
 
@@ -113,7 +123,7 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint
     } else {
         // Later configures are resizes, so we have to queue them up for a time when we
         // are not painting to the window.
-        window()->applyConfigureWhenPossible();
+        applyConfigureWhenPossible();
     }
 }
 
@@ -130,7 +140,7 @@ void QWaylandLayerSurface::attachPopup(QtWaylandClient::QWaylandShellSurface *po
 
 void QWaylandLayerSurface::applyConfigure()
 {
-    window()->resizeFromApplyConfigure(m_pendingSize);
+    resizeFromApplyConfigure(m_pendingSize);
 }
 
 void QWaylandLayerSurface::setDesiredSize(const QSize &size)
@@ -195,20 +205,21 @@ bool QWaylandLayerSurface::requestActivate()
         return false;
     }
     if (!m_activationToken.isEmpty()) {
-        activation->activate(m_activationToken, window()->wlSurface());
+        activation->activate(m_activationToken, wlSurface());
         m_activationToken = {};
         return true;
     } else if (const auto token = qEnvironmentVariable("XDG_ACTIVATION_TOKEN"); !token.isEmpty()) {
-        activation->activate(token, window()->wlSurface());
+        activation->activate(token, wlSurface());
         qunsetenv("XDG_ACTIVATION_TOKEN");
         return true;
     } else {
         const auto focusWindow = QGuiApplication::focusWindow();
-        const auto wlWindow = focusWindow ? static_cast<QtWaylandClient::QWaylandWindow *>(focusWindow->handle()) : window();
-        if (const auto seat = wlWindow->display()->lastInputDevice()) {
-            const auto tokenProvider = activation->requestXdgActivationToken(wlWindow->display(), wlWindow->wlSurface(), seat->serial(), QString());
+        const auto waylandApp = qGuiApp->nativeInterface<QNativeInterface::QWaylandApplication>();
+        const auto surface = focusWindow ? focusWindow->nativeInterface<QNativeInterface::Private::QWaylandWindow>()->surface() : wlSurface();
+        if (const auto seat = waylandApp->lastInputSeat()) {
+            const auto tokenProvider = activation->requestXdgActivationToken(seat, surface, waylandApp->lastInputSerial(), QString());
             connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this, [this](const QString &token) {
-                m_shell->activation()->activate(token, window()->wlSurface());
+                m_shell->activation()->activate(token, wlSurface());
             });
             connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
             return true;
@@ -227,7 +238,7 @@ bool QWaylandLayerSurface::requestActivateOnShow()
         return false;
     }
 
-    if (m_window->window()->property("_q_showWithoutActivating").toBool()) {
+    if (platformWindow()->window()->property("_q_showWithoutActivating").toBool()) {
         return false;
     }
 
@@ -245,16 +256,21 @@ void QWaylandLayerSurface::requestXdgActivationToken(quint32 serial)
     if (!activation->isActive()) {
         return;
     }
-    auto tokenProvider = activation->requestXdgActivationToken(window()->display(), window()->wlSurface(), serial, QString());
+    const auto waylandApp = qGuiApp->nativeInterface<QNativeInterface::QWaylandApplication>();
+    auto tokenProvider = activation->requestXdgActivationToken(waylandApp->lastInputSeat(), wlSurface(), serial, QString());
 
     connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, this, [this](const QString &token) {
-        Q_EMIT window()->xdgActivationTokenCreated(token);
+        // FIXME  No way to do this without knowing QWaylandWindow because QPlatofrmWindow is not QObject
+        // But we wanted to make a better API as well or alternatively the signal needs to be on QWaylandShellSurface as well
+        // Q_EMIT window()->xdgActivationTokenCreated(token);
+        // QMetaObject::invokeMethod(window(), "xdgActivationTokenCreated", token);
     });
     connect(tokenProvider, &QWaylandXdgActivationTokenV1::done, tokenProvider, &QObject::deleteLater);
 }
 
 void QWaylandLayerSurface::sendExpose()
 {
-    window()->updateExposure();
+    // FIXME No way to call this, needs wrapper in QWaylandShellSurface
+    // window()->updateExposure();
 }
 }

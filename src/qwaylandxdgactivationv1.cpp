@@ -3,8 +3,6 @@
  */
 
 #include "qwaylandxdgactivationv1_p.h"
-#include <QtWaylandClient/private/qwaylanddisplay_p.h>
-#include <QtWaylandClient/private/qwaylandinputdevice_p.h>
 
 QWaylandXdgActivationV1::QWaylandXdgActivationV1()
     : QWaylandClientExtensionTemplate<QWaylandXdgActivationV1>(1)
@@ -19,10 +17,8 @@ QWaylandXdgActivationV1::~QWaylandXdgActivationV1()
     }
 }
 
-QWaylandXdgActivationTokenV1 *QWaylandXdgActivationV1::requestXdgActivationToken(QtWaylandClient::QWaylandDisplay *display,
-                                                                                 struct ::wl_surface *surface,
-                                                                                 std::optional<uint32_t> serial,
-                                                                                 const QString &app_id)
+QWaylandXdgActivationTokenV1 *
+QWaylandXdgActivationV1::requestXdgActivationToken(::wl_seat *seat, struct ::wl_surface *surface, std::optional<uint32_t> serial, const QString &app_id)
 {
     auto wl = get_activation_token();
     auto provider = new QWaylandXdgActivationTokenV1;
@@ -34,8 +30,8 @@ QWaylandXdgActivationTokenV1 *QWaylandXdgActivationV1::requestXdgActivationToken
     if (!app_id.isEmpty()) {
         provider->set_app_id(app_id);
     }
-    if (serial && display->lastInputDevice()) {
-        provider->set_serial(*serial, display->lastInputDevice()->wl_seat());
+    if (serial && seat) {
+        provider->set_serial(*serial, seat);
     }
     provider->commit();
     return provider;

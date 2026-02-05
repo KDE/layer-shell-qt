@@ -9,9 +9,6 @@
 #include "qwaylandlayersurface_p.h"
 #include "qwaylandxdgactivationv1_p.h"
 
-#include <QtWaylandClient/private/qwaylanddisplay_p.h>
-#include <QtWaylandClient/private/qwaylandwindow_p.h>
-
 namespace LayerShellQt
 {
 QWaylandLayerShellIntegration::QWaylandLayerShellIntegration()

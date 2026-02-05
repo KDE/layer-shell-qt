@@ -8,6 +8,7 @@
 #ifndef _LAYERSURFACE_H
 #define _LAYERSURFACE_H
 
+#include <QRect>
 #include <wayland-client.h>
 
 #include "qwaylandlayershellintegration_p.h"
@@ -41,7 +42,7 @@ public:
     void setMargins(const QMargins &margins);
     void setKeyboardInteractivity(uint32_t interactivity);
     void setLayer(uint32_t layer);
-
+    void setContentGeometry(const QRect &rect) override;
     void applyConfigure() override;
     void setWindowSize(const QSize &size) override;
 
@@ -60,6 +61,7 @@ private:
     QtWaylandClient::QWaylandWindow *m_window;
     QSize m_pendingSize;
     QString m_activationToken;
+    QRect m_lastContentGeometry;
 
     bool m_configured = false;
 };

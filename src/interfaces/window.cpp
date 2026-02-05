@@ -7,14 +7,13 @@
 #include "window.h"
 #include "../qwaylandlayershellintegration_p.h"
 
+#include <QtWaylandClient/private/qwaylandclientshellapi_p.h>
 #include <layershellqt_logging.h>
 
 #include <QPlatformSurfaceEvent>
 #include <QPointer>
 #include <mutex>
 #include <optional>
-
-#include <QtWaylandClient/private/qwaylandwindow_p.h>
 
 using namespace LayerShellQt;
 
@@ -274,23 +273,27 @@ bool Window::eventFilter(QObject *watched, QEvent *event)
 
 void Window::initializeShell()
 {
-    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(d->parentWindow->handle());
-    if (!waylandWindow) {
-        qCWarning(LAYERSHELLQT) << d->parentWindow << "is not a wayland window. Not creating zwlr_layer_surface";
-        return;
-    }
+    // FIXME
+    // auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(d->parentWindow->handle());
+    // if (!waylandWindow) {
+    //     qCWarning(LAYERSHELLQT) << d->parentWindow << "is not a wayland window. Not creating zwlr_layer_surface";
+    //     return;
+    // }
 
     static QWaylandLayerShellIntegration *shellIntegration = nullptr;
     if (!shellIntegration) {
         shellIntegration = new QWaylandLayerShellIntegration();
-        if (!shellIntegration->initialize(waylandWindow->display())) {
+        // Why does it take a display that is unused
+        if (!shellIntegration->initialize(nullptr)) {
             delete shellIntegration;
             shellIntegration = nullptr;
             qCWarning(LAYERSHELLQT) << "Failed to initialize layer-shell integration, possibly because compositor does not support the layer-shell protocol";
             return;
         }
     }
-    waylandWindow->setShellIntegration(shellIntegration);
+    // FIXME this is relevant when the plugin is not  the default shell integration
+    // Something like QWaylandShellIntegration::assignToWindow(QPlatformWindow *)?
+    // waylandWindow->setShellIntegration(shellIntegration);
 }
 
 Window *Window::get(QWindow *window)
