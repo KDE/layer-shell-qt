@@ -133,6 +133,7 @@ void QWaylandLayerSurface::applyConfigure()
     window()->resizeFromApplyConfigure(m_pendingSize);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 void QWaylandLayerSurface::setDesiredSize(const QSize &size)
 {
     const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
@@ -147,6 +148,22 @@ void QWaylandLayerSurface::setDesiredSize(const QSize &size)
     }
     set_size(effectiveSize.width(), effectiveSize.height());
 }
+#else
+void QWaylandLayerSurface::setDesiredSize(const QSizeF &size)
+{
+    const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
+    const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
+
+    QSize effectiveSize = size.toSize();
+    if (horizontallyConstrained) {
+        effectiveSize.setWidth(0);
+    }
+    if (verticallyConstrained) {
+        effectiveSize.setHeight(0);
+    }
+    set_size(effectiveSize.width(), effectiveSize.height());
+}
+#endif
 
 void QWaylandLayerSurface::setAnchor(uint anchor)
 {
@@ -181,7 +198,11 @@ void QWaylandLayerSurface::setLayer(uint32_t layer)
         set_layer(layer);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 void QWaylandLayerSurface::setWindowSize(const QSize &size)
+#else
+void QWaylandLayerSurface::setWindowSize(const QSizeF &size)
+#endif
 {
     if (m_interface->desiredSize().isNull()) {
         setDesiredSize(size);
