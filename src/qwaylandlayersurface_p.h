@@ -34,7 +34,11 @@ public:
     }
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     void setDesiredSize(const QSize &size);
+#else
+    void setDesiredSize(const QSizeF &size);
+#endif
     void setAnchor(uint32_t anchor);
     void setExclusiveZone(int32_t zone);
     void setExclusiveEdge(uint32_t edge);
@@ -43,7 +47,11 @@ public:
     void setLayer(uint32_t layer);
 
     void applyConfigure() override;
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     void setWindowSize(const QSize &size) override;
+#else
+    void setWindowSize(const QSizeF &size) override;
+#endif
 
     bool requestActivate() override;
     bool requestActivateOnShow() override;
