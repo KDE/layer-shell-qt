@@ -34,7 +34,7 @@ public:
     }
     void attachPopup(QtWaylandClient::QWaylandShellSurface *popup) override;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
     void setDesiredSize(const QSize &size);
 #else
     void setDesiredSize(const QSizeF &size);
@@ -47,7 +47,7 @@ public:
     void setLayer(uint32_t layer);
 
     void applyConfigure() override;
-#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
     void setWindowSize(const QSize &size) override;
 #else
     void setWindowSize(const QSizeF &size) override;
@@ -66,7 +66,11 @@ private:
     QWaylandLayerShellIntegration *m_shell;
     LayerShellQt::Window *m_interface;
     QtWaylandClient::QWaylandWindow *m_window;
+#if QT_VERSION < QT_VERSION_CHECK(6, 13, 0)
     QSize m_pendingSize;
+#else
+    QSizeF m_pendingSize;
+#endif
     QString m_activationToken;
 
     bool m_configured = false;
