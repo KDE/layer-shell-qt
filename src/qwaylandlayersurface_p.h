@@ -66,7 +66,11 @@ private:
     QWaylandLayerShellIntegration *m_shell;
     LayerShellQt::Window *m_interface;
     QtWaylandClient::QWaylandWindow *m_window;
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     QSize m_pendingSize;
+#else
+    QSizeF m_pendingSize;
+#endif
     QString m_activationToken;
 
     bool m_configured = false;

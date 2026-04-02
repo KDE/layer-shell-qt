@@ -104,7 +104,11 @@ void QWaylandLayerSurface::zwlr_layer_surface_v1_closed()
 void QWaylandLayerSurface::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
 {
     ack_configure(serial);
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     m_pendingSize = QSize(width, height);
+#else
+    m_pendingSize = QSizeF(width, height) / compositorToClientScale();
+#endif
 
     if (!m_configured) {
         m_configured = true;
@@ -154,7 +158,7 @@ void QWaylandLayerSurface::setDesiredSize(const QSizeF &size)
     const bool horizontallyConstrained = m_interface->anchors().testFlags({Window::AnchorLeft, Window::AnchorRight});
     const bool verticallyConstrained = m_interface->anchors().testFlags({Window::AnchorTop, Window::AnchorBottom});
 
-    QSize effectiveSize = size.toSize();
+    QSize effectiveSize = (size * clientToCompositorScale()).toSize();
     if (horizontallyConstrained) {
         effectiveSize.setWidth(0);
     }
@@ -172,7 +176,7 @@ void QWaylandLayerSurface::setAnchor(uint anchor)
 
 void QWaylandLayerSurface::setExclusiveZone(int32_t zone)
 {
-    set_exclusive_zone(zone);
+    set_exclusive_zone(std::round(zone * clientToCompositorScale()));
 }
 
 void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
@@ -184,7 +188,14 @@ void QWaylandLayerSurface::setExclusiveEdge(uint32_t edge)
 
 void QWaylandLayerSurface::setMargins(const QMargins &margins)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
+#else
+    set_margin(std::round(margins.top() * clientToCompositorScale()),
+               std::round(margins.right() * clientToCompositorScale()),
+               std::round(margins.bottom() * clientToCompositorScale()),
+               std::round(margins.left() * clientToCompositorScale()));
+#endif
 }
 
 void QWaylandLayerSurface::setKeyboardInteractivity(uint32_t interactivity)
