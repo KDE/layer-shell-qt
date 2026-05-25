@@ -9,4 +9,4 @@ Dependencies:
     'third-party/wayland-protocols': '@latest'
 
 Options:
- require-passing-tests-on: ['Linux', 'FreeBSD', 'Windows']
+ require-passing-tests-on: ['@all']
