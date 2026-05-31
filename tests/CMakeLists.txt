@@ -3,3 +3,5 @@
 
 add_executable(layershellqt-test main.cpp)
 target_link_libraries(layershellqt-test PRIVATE LayerShellQtInterface Qt::Qml Qt::Gui)
+
+add_test(NAME layershellqt-test COMMAND layershellqt-test)
