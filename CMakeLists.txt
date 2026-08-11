@@ -60,7 +60,7 @@ kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
 ecm_set_disabled_deprecation_versions(QT 6.8.1
-    KF 6.9.0
+    KF 6.29.0
 )
 
 add_subdirectory(src)
